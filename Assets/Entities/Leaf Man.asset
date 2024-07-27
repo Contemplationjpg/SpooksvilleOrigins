@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 258d8bd49b5b4004db5a3e888957098e, type: 3}
+  m_Name: Leaf Man
+  m_EditorClassIdentifier: 
+  entityName: Leaf Man
+  displayName: Uvwevwe
+  sprite: {fileID: 21300000, guid: d63930e00ea887a40982e81713cc4708, type: 3}
+  isEnemy: 1
+  maxHealth: 50
+  currentHealth: 50
+  defense: 10
+  power: 10
+  weaknessTag: fire
+  luck: 0
+  canCrit: 1
+  attackDelay: 1
