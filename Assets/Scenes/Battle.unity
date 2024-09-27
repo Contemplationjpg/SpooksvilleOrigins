@@ -1272,8 +1272,8 @@ Transform:
   m_GameObject: {fileID: 267284590}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.6, y: 1.3, z: 0}
-  m_LocalScale: {x: 13.934964, y: 13.934964, z: 13.934964}
+  m_LocalPosition: {x: 1, y: 11.1, z: 0}
+  m_LocalScale: {x: 25.46507, y: 25.46507, z: 25.46507}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -1319,7 +1319,7 @@ SpriteRenderer:
   m_SortingLayerID: -116834655
   m_SortingLayer: -1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 8c15fd852535b6846b53b8b54d53b290, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9d4075773d1278f46a23bdb4368e7968, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -7893,7 +7893,7 @@ SpriteRenderer:
   m_SortingLayerID: 868241457
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7c09ee850c622174296d57a488efb94a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f50fa29b8f364f444b45917cb5693dcc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -7913,8 +7913,8 @@ Transform:
   m_GameObject: {fileID: 1778649008}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.19, y: 7.92, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -13.37, y: 6.54, z: 0}
+  m_LocalScale: {x: 85.55, y: 85.55, z: 85.55}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -7973,21 +7973,21 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 12, y: 16.95}
+    oldSize: {x: 0.16, y: 0.16}
     newSize: {x: 12, y: 16.95}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 12, y: 16.95}
+  m_Size: {x: 0.16, y: 0.16}
   m_EdgeRadius: 0
 --- !u!114 &1778649013
 MonoBehaviour:
@@ -8001,6 +8001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dccb561a5b8f15b458b070eea84ed03d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doingAnimation: 0
   hopTime: 0.2
   hopDistance: 2
   hopSpeed: 0.001

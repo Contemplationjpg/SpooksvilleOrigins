@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Billy
   displayName: Billy
-  sprite: {fileID: 21300000, guid: 7c09ee850c622174296d57a488efb94a, type: 3}
+  sprite: {fileID: 21300000, guid: f50fa29b8f364f444b45917cb5693dcc, type: 3}
   isEnemy: 0
   maxHealth: 100
   currentHealth: 100
@@ -23,3 +23,4 @@ MonoBehaviour:
   weaknessTag: 
   luck: 3
   canCrit: 1
+  attackDelay: 0

@@ -138,7 +138,12 @@ IEnumerator DoEnemyTurns()
             Debug.Log("Enemy " + i + " turn over.");
             checkingForEnemyAction = true;
         }
+        else
+        {
+            checkingForEnemyAction = true;
+        }
     }
+    checkingForEnemyAction = false;
     ChangeState(State.WaitingForPlayerInput);
 
 }
