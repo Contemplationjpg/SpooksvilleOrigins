@@ -5,10 +5,13 @@ using UnityEngine.Scripting;
 
 public class LootManager : MonoBehaviour
 {
-    LootManager instance;
+    public static LootManager instance;
+
+    public Item testItem;
 
     [SerializeField]
     private GameObject lootPanel;
+    [SerializeField]
     private LootSlot[] lootSlots;
 
     public void Awake() 
@@ -35,7 +38,10 @@ public class LootManager : MonoBehaviour
         }
     } 
 
-
+    public void SetLootAsTestItem(int slot)
+    {
+        SetLootSlot(slot, testItem, 1);
+    }
 
 
 

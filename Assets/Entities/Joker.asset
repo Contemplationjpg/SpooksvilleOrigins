@@ -19,7 +19,7 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 100
   defense: 10
-  power: 10
+  power: 1
   weaknessTag: 
   luck: 0
   canCrit: 1

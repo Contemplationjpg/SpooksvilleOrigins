@@ -14,6 +14,7 @@ public class BattleManager : MonoBehaviour
     public ItemSystem itemDatabase;
     public HealthBar[] enemyHealthBars;
     public WeaponSystem weaponDatabase;
+    public EntitySystem entityDatabase;
 
     
     
@@ -32,7 +33,9 @@ public class BattleManager : MonoBehaviour
         playerInitialized = false;
         player = playerObject.GetComponent<Player>();
         playerInitialized = true;
+        weaponDatabase.RefreshDatabase();
         itemDatabase.RefreshDatabase();
+        entityDatabase.RefreshDatabase();
 
         enemies = new EntitySlot[enemyBattlePositions.Length];
         enemyHealthBars = new HealthBar[enemyBattlePositions.Length];
@@ -69,7 +72,33 @@ public class BattleManager : MonoBehaviour
         enemyHealthBars[healthBarNumber].IncreaseHealth(1);
     }
 
+    public void TestEnemyEncounter()
+    {
+        Debug.Log("Starting TestEnemyEncounter");
+        int[] e = new int[2];
+        e[0] = 1;
+        e[1] = 1;
+        // e[2] = 0;
+        // e[3] = 0;
+        SpawnEncounter(e);
+    }
 
+    public void SpawnEncounter(int[] encounterList)
+    {
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            RemoveEnemy(i);
+        }
+        for (int i = 0; i < encounterList.Length; i++)
+        {
+            if (i>=enemyBattlePositions.Length)
+            {
+                break;
+            }
+            Debug.Log("attempting to make encounter enemy: " + EntitySystem.instance.GetEntity(encounterList[i]).entityName);
+            CreateEntity(EntitySystem.instance.GetEntity(encounterList[i]));
+        }
+    }
 
     int CheckForEarliestEntitySlot() //returns slot number of earliest entity slot
     {
@@ -166,16 +195,6 @@ public class BattleManager : MonoBehaviour
             slotOverride--;
             if (!enemies[slotOverride].taken)
             {
-            //     GameObject newEntity = new GameObject(entityType.entityName);
-            //     SpriteRenderer sr = newEntity.AddComponent<SpriteRenderer>();
-            //     BoxCollider2D bc2d = newEntity.AddComponent<BoxCollider2D>();
-            //     Entity e = newEntity.AddComponent<Entity>();
-            //     e.entityType = entityType;
-
-            //     e.BuildEntity();
-
-            //     bc2d.isTrigger=true;
-            //     bc2d.size = sr.size;
 
             GameObject newEntity = InitializeEntity(entityType);
 
