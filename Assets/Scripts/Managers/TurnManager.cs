@@ -35,6 +35,7 @@ public class TurnManager : MonoBehaviour
     private void Start()
     {
         ChangeState(State.None);
+        StartBattle();
     }
 
     public void StartBattle()

@@ -12,6 +12,7 @@ public class Item : ScriptableObject
     public string itemName = "New Item";
     public string displayName = "New Item";
     public Sprite icon = null;
+    public string description = "";
     public bool isDefaultItem = false;
     public bool isStackable = false;
     public int maxStackSize = 99;

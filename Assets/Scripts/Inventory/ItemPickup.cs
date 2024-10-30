@@ -53,12 +53,8 @@ public class ItemPickup : MonoBehaviour
                     if (IsInOverworld)
                     {
                         Destroy(gameObject);
-                        PickedUp = true;
                     }
-                    else
-                    {
                         PickedUp = true;
-                    }
                 }
                 else
                     Debug.Log("remaining amount: " + amount);
