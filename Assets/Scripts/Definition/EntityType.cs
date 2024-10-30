@@ -9,6 +9,7 @@ public class EntityType : ScriptableObject
     public string displayName = "New Item";
     public Sprite sprite = null;
     public bool isEnemy = true;
+    public bool winRequirement = true;
 
     //stats
     public int maxHealth = 100;

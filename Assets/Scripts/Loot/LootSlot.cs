@@ -26,7 +26,11 @@ public class LootSlot : MonoBehaviour
     }
     public void GiveLoot()
     {
-        GiveItem();
+        if (GiveItem())
+        {
+            LootManager.instance.CloseDisplay();
+            TurnManager.instance.ChangeState(TurnManager.State.NoEncounter);
+        }
     }
     public bool GiveItem()
     {

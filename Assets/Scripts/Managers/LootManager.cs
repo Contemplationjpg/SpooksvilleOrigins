@@ -20,6 +20,20 @@ public class LootManager : MonoBehaviour
         CloseDisplay();
     }
 
+    public void EncounterLoot() 
+    {
+        OpenDisplay();
+        SetAllAsTestLoot(); //debug
+    }
+
+    private void SetAllAsTestLoot() //debug
+    {
+        for (int i = 0; i < lootSlots.Length;i++)
+        {
+            SetLootSlot(i, BattleManager.instance.weaponDatabase.GetWeapon(2),1);
+        }
+    }
+
     public void OpenDisplay()
     {
         lootPanel.SetActive(true);
@@ -38,7 +52,7 @@ public class LootManager : MonoBehaviour
         }
     } 
 
-    public void SetLootAsTestItem(int slot)
+    public void SetLootAsTestItem(int slot) //debug
     {
         SetLootSlot(slot, testItem, 1);
     }

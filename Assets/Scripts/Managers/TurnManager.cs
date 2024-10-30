@@ -20,7 +20,7 @@ public class TurnManager : MonoBehaviour
     public Player player;
 
 
-    public enum State { None, Busy, WaitingForPlayerInput, WaitingForEnemyInput, Ending }
+    public enum State { None, Busy, WaitingForPlayerInput, WaitingForEnemyInput, EncounterWin, NoEncounter }
 
     public enum Choice { Attack, Item }
 
@@ -40,7 +40,8 @@ public class TurnManager : MonoBehaviour
 
     public void StartBattle()
     {
-        ChangeState(State.WaitingForPlayerInput);
+        // ChangeState(State.WaitingForPlayerInput);
+        ChangeState(State.NoEncounter);
     }
 
     public void UpdateTurnDisplay()
@@ -49,6 +50,7 @@ public class TurnManager : MonoBehaviour
     }
     public void ChangeState(State changeTo)
     {
+        Debug.Log("Changing State to " + changeTo);
         state = changeTo;
         UpdateTurnDisplay();
     }
@@ -57,6 +59,17 @@ public class TurnManager : MonoBehaviour
     {
         if(state!=State.None)
         {
+            if (state == State.NoEncounter)
+            {
+                ChangeState(State.Busy);
+                BattleManager.instance.TestEnemyEncounter(); //debug
+                ChangeState(State.WaitingForPlayerInput);
+            }
+            if (state == State.EncounterWin)
+            {
+                ChangeState(State.Busy);
+                LootManager.instance.EncounterLoot();
+            }
             if (state == State.WaitingForPlayerInput)
             {
                 if (ChoiceChosen)
@@ -87,9 +100,17 @@ public class TurnManager : MonoBehaviour
             else if (state == State.WaitingForEnemyInput)
             {
                 ChangeState(State.Busy);
-                
-                StartCoroutine(DoEnemyTurns());
+                if (!BattleManager.instance.checkForWinRequirements())
+                {
+                    ChangeState(State.EncounterWin);
+                    BattleManager.instance.ClearEncounter();
+                }
+                else
+                {
+                    StartCoroutine(DoEnemyTurns());
 
+                }
+                
                 // if (ChoiceChosen)
                 // {
                 //     switch ((int)choice)
@@ -145,8 +166,10 @@ IEnumerator DoEnemyTurns()
         }
     }
     checkingForEnemyAction = false;
-    ChangeState(State.WaitingForPlayerInput);
-
+    if (state!=State.EncounterWin)
+    {
+        ChangeState(State.WaitingForPlayerInput);
+    }
 }
 
 

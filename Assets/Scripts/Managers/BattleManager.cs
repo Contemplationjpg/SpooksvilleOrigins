@@ -72,23 +72,27 @@ public class BattleManager : MonoBehaviour
         enemyHealthBars[healthBarNumber].IncreaseHealth(1);
     }
 
-    public void TestEnemyEncounter()
+    public void TestEnemyEncounter() //debug
     {
         Debug.Log("Starting TestEnemyEncounter");
         int[] e = new int[2];
-        e[0] = 1;
-        e[1] = 1;
+        e[0] = 2;
+        e[1] = 3;
         // e[2] = 0;
         // e[3] = 0;
         SpawnEncounter(e);
     }
 
-    public void SpawnEncounter(int[] encounterList)
+    public void ClearEncounter()
     {
         for (int i = 0; i < enemies.Length; i++)
         {
             RemoveEnemy(i);
         }
+    }
+    public void SpawnEncounter(int[] encounterList)
+    {
+        ClearEncounter();
         for (int i = 0; i < encounterList.Length; i++)
         {
             if (i>=enemyBattlePositions.Length)
@@ -272,6 +276,26 @@ public class BattleManager : MonoBehaviour
         Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[selectedWeaponSlot].weapon.itemName);
     }
 
+    public void DEBUGCheckWinReq()
+    {
+        Debug.Log(checkForWinRequirements());
+    }
+    public bool checkForWinRequirements()
+    {
+        for (int i = 0; i < enemyHealthBars.Length;i++)
+        {
+            if (enemyHealthBars[i].entity != null)
+            {
+                if (enemyHealthBars[i].entity.entityType.winRequirement)
+                {
+                    Debug.Log("winreq enemy " + enemyHealthBars[i].entity.entityType.entityName + " found");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void PlayerAttack(List<Entity> targets)
     {
         foreach(Entity e in targets)
@@ -289,7 +313,7 @@ public class BattleManager : MonoBehaviour
                         {
                             RemoveEnemy(i);
                         }
-                        WeaponInventory.instance.ReduceDurability(selectedWeaponSlot,1);    
+                        WeaponInventory.instance.ReduceDurability(selectedWeaponSlot,1);
                     }
                 }
             }
