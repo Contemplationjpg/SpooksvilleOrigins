@@ -107,6 +107,7 @@ public class BattleManager : MonoBehaviour
         {
             RemoveEnemy(i);
         }
+        
         for (int i = 0; i < currentEncounter.enemies.Length; i++)
         {
             if (i>=enemyBattlePositions.Length)
@@ -336,6 +337,26 @@ public class BattleManager : MonoBehaviour
         Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[selectedWeaponSlot].weapon.itemName);
     }
 
+    public void DEBUGCheckWinReq()
+    {
+        Debug.Log(checkForWinRequirements());
+    }
+    public bool checkForWinRequirements()
+    {
+        for (int i = 0; i < enemyHealthBars.Length;i++)
+        {
+            if (enemyHealthBars[i].entity != null)
+            {
+                if (enemyHealthBars[i].entity.entityType.winRequirement)
+                {
+                    Debug.Log("winreq enemy " + enemyHealthBars[i].entity.entityType.entityName + " found");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void PlayerAttack(List<Entity> targets)
     {
         foreach(Entity e in targets)
@@ -353,7 +374,7 @@ public class BattleManager : MonoBehaviour
                         {
                             RemoveEnemy(i);
                         }
-                        WeaponInventory.instance.ReduceDurability(selectedWeaponSlot,1);    
+                        WeaponInventory.instance.ReduceDurability(selectedWeaponSlot,1);
                     }
                 }
             }

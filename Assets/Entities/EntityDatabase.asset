@@ -15,3 +15,5 @@ MonoBehaviour:
   entityDatabase:
   - {fileID: 11400000, guid: f8a48c04ededf074faf4d43e86881180, type: 2}
   - {fileID: 11400000, guid: 2117caef47c89c94aa927707c40c0810, type: 2}
+  - {fileID: 11400000, guid: 97d08bf4d97a64742aaede58eccc9b1c, type: 2}
+  - {fileID: 11400000, guid: 3186f2c346dca7344a8fdda0445e8187, type: 2}
