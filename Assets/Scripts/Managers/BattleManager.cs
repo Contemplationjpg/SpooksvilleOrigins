@@ -15,6 +15,12 @@ public class BattleManager : MonoBehaviour
     public HealthBar[] enemyHealthBars;
     public WeaponSystem weaponDatabase;
     public EntitySystem entityDatabase;
+    public EncounterSystem encounterSystem;
+
+
+    public EncounterType currentEncounter;
+    public int encounterNumber = 0;
+    public EncounterType[] encounterList = new EncounterType[1];
 
     
     
@@ -36,6 +42,9 @@ public class BattleManager : MonoBehaviour
         weaponDatabase.RefreshDatabase();
         itemDatabase.RefreshDatabase();
         entityDatabase.RefreshDatabase();
+        encounterSystem.RefreshDatabase();
+
+        currentEncounter = encounterList[encounterNumber];
 
         enemies = new EntitySlot[enemyBattlePositions.Length];
         enemyHealthBars = new HealthBar[enemyBattlePositions.Length];
@@ -53,6 +62,8 @@ public class BattleManager : MonoBehaviour
         playerHealth.entity = player;
         playerHealth.ShowHealthBar();
         playerHealth.UpdateHealthBar();
+        SpawnEncounter();
+        // SetEncounterLoot();
     }
 
 
@@ -72,35 +83,57 @@ public class BattleManager : MonoBehaviour
         enemyHealthBars[healthBarNumber].IncreaseHealth(1);
     }
 
-    public void TestEnemyEncounter()
-    {
-        Debug.Log("Starting TestEnemyEncounter");
-        int[] e = new int[2];
-        e[0] = 1;
-        e[1] = 1;
-        // e[2] = 0;
-        // e[3] = 0;
-        SpawnEncounter(e);
-    }
+    // public void TestEnemyEncounter()
+    // {
+    //     Debug.Log("Starting TestEnemyEncounter");
+    //     int[] e = new int[2];
+    //     e[0] = 1;
+    //     e[1] = 1;
+    //     // e[2] = 0;
+    //     // e[3] = 0;
+    //     SpawnEncounter(e);
+    // }
 
-    public void SpawnEncounter(int[] encounterList)
+    public bool SpawnEncounter()
     {
+        if (encounterNumber > encounterList.Length-1)
+        {
+            return false;
+        }
+
+        ClearEnemies();
+        
         for (int i = 0; i < enemies.Length; i++)
         {
             RemoveEnemy(i);
         }
-        for (int i = 0; i < encounterList.Length; i++)
+        for (int i = 0; i < currentEncounter.enemies.Length; i++)
         {
             if (i>=enemyBattlePositions.Length)
             {
                 break;
             }
-            Debug.Log("attempting to make encounter enemy: " + EntitySystem.instance.GetEntity(encounterList[i]).entityName);
-            CreateEntity(EntitySystem.instance.GetEntity(encounterList[i]));
+            Debug.Log("attempting to make encounter enemy: " + currentEncounter.enemies[i].entityName);
+            CreateEntity(currentEncounter.enemies[i]);
         }
+        for (int i = 0; i < currentEncounter.killReqs.Length; i++) 
+        {
+            enemies[currentEncounter.killReqs[i]].entity.requiredKill = true;
+        }
+        return true;
     }
 
-    int CheckForEarliestEntitySlot() //returns slot number of earliest entity slot
+    public void SetEncounterLoot()
+    {
+        LootManager.instance.SetAllLoot(currentEncounter);
+    }
+
+    public void increaseEncounterNumber(int num = 1) 
+    {
+        encounterNumber += num;
+    }
+
+    public int CheckForEarliestEntitySlot() //returns slot number of earliest entity slot
     {
         int earliestSlot = 0;
         for (int i = 0; i < enemies.Length; i++)
@@ -114,6 +147,23 @@ public class BattleManager : MonoBehaviour
         }
         Debug.Log("No entity slots available");
         return earliestSlot;
+    }
+
+    public bool CheckForKillRequirement() //returns slot number of earliest entity slot
+    {
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            if (enemies[i].taken)
+            {
+                if (enemies[i].entity.requiredKill)
+                {
+                    Debug.Log("Kill requirement exists at slot " + i);
+                    return true;
+                }
+            }
+        }
+        Debug.Log("No kill requirement entity exists");
+        return false;
     }
 
     GameObject InitializeEntity(EntityType entityType)
@@ -233,6 +283,20 @@ public class BattleManager : MonoBehaviour
         enemies[slot].taken = false;
         enemyHealthBars[slot].HideHealthBar();
     }
+
+    public void ClearEnemies()
+    {
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            RemoveEnemy(i);
+        }
+    }
+
+    // public void KillEnemy(int slot)
+    // {
+
+    //     RemoveEnemy(slot);
+    // }
 
     public int FindEnemyInSlot(Entity entCheck)
     {

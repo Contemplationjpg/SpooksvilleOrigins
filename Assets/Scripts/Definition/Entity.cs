@@ -11,6 +11,7 @@ public class Entity : MonoBehaviour
     public string entityName = "default name";
     public bool isEnemy = true;
     public EnemyAI ai;
+    public bool requiredKill = false;
 
 
     public int maxHealth = 100;
