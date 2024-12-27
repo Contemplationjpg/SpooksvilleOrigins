@@ -13,7 +13,7 @@ public class LootSlot : MonoBehaviour
 
     public void Awake()
     {
-        slotItem = null;
+        // slotItem = null;
     }
     public void SetItem(Item item, int amount)
     {
@@ -36,13 +36,12 @@ public class LootSlot : MonoBehaviour
             {
                 if (slotItem.GetType() == typeof(Weapon))
                 {
-                    WeaponInventory.instance.AddWeapon((Weapon)slotItem, 30);
+                    WeaponInventory.instance.AddWeapon((Weapon)slotItem, WeaponSystem.instance.GetWeapon(slotItem.itemName).maxDurability);
                 }
                 else
                 {
                 Inventory.instance.AddItem(slotItem, itemAmount);    
                 }
-                LootManager.instance.CloseDisplay();
                 return true;
             }
             print("Null Item in LootSlot, could not give Item");
@@ -52,6 +51,23 @@ public class LootSlot : MonoBehaviour
         {
             print("could not give item in LootSlot");
             return false;
+        }
+    }
+
+    public void EndLooting() 
+    {
+        if (GiveItem())
+        {
+            LootManager.instance.CloseDisplay();
+            if (!BattleManager.instance.SpawnEncounter()) 
+            {
+                TurnManager.instance.ChangeState(TurnManager.State.Win);
+            }
+            else
+            {
+                TurnManager.instance.ChangeState(TurnManager.State.WaitingForPlayerInput);
+            }
+            
         }
     }
 

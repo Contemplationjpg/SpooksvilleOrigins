@@ -1091,6 +1091,12 @@ MonoBehaviour:
   enemyHealthBars: []
   weaponDatabase: {fileID: 11400000, guid: 09f2155cc2fecff428d6705e7a2e616e, type: 2}
   entityDatabase: {fileID: 11400000, guid: 91734e1ab4edf284291ef370df7dc116, type: 2}
+  encounterSystem: {fileID: 11400000, guid: e9d18748d90e9e9408b3a6ac12114ec6, type: 2}
+  currentEncounter: {fileID: 11400000, guid: cc979df34710fb84b95de126771d6b79, type: 2}
+  encounterNumber: 0
+  encounterList:
+  - {fileID: 11400000, guid: cc979df34710fb84b95de126771d6b79, type: 2}
+  - {fileID: 11400000, guid: cc979df34710fb84b95de126771d6b79, type: 2}
   enemyBattlePositions:
   - {fileID: 1398539397}
   - {fileID: 1615791890}
@@ -3242,7 +3248,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 177891768}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-        m_MethodName: TestEnemyEncounter
+        m_MethodName: SpawnEncounter
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4795,7 +4801,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 931714666}
         m_TargetAssemblyTypeName: LootSlot, Assembly-CSharp
-        m_MethodName: GiveLoot
+        m_MethodName: EndLooting
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5619,7 +5625,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1124190995}
         m_TargetAssemblyTypeName: LootSlot, Assembly-CSharp
-        m_MethodName: GiveLoot
+        m_MethodName: EndLooting
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7360,6 +7366,7 @@ MonoBehaviour:
   entityName: Joker
   isEnemy: 1
   ai: {fileID: 0}
+  requiredKill: 0
   maxHealth: 100
   currentHealth: 100
   defense: 10
@@ -8967,6 +8974,7 @@ MonoBehaviour:
   entityName: Billy
   isEnemy: 0
   ai: {fileID: 0}
+  requiredKill: 0
   maxHealth: 100
   currentHealth: 100
   defense: 10
@@ -9213,7 +9221,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1814429273}
         m_TargetAssemblyTypeName: LootSlot, Assembly-CSharp
-        m_MethodName: GiveLoot
+        m_MethodName: EndLooting
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11424,6 +11432,7 @@ MonoBehaviour:
   entityName: Billy
   isEnemy: 1
   ai: {fileID: 0}
+  requiredKill: 0
   maxHealth: 100
   currentHealth: 100
   defense: 10

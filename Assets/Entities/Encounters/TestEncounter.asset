@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5ef05e6bd55c042b79bff3854398ae, type: 3}
+  m_Name: TestEncounter
+  m_EditorClassIdentifier: 
+  encounterName: TestEncounter
+  enemies:
+  - {fileID: 11400000, guid: f8a48c04ededf074faf4d43e86881180, type: 2}
+  - {fileID: 11400000, guid: 2117caef47c89c94aa927707c40c0810, type: 2}
+  - {fileID: 11400000, guid: 2117caef47c89c94aa927707c40c0810, type: 2}
+  killReqs: 00000000
+  loot:
+  - {fileID: 11400000, guid: 27b9703da8e508f478396644c8bf595e, type: 2}
+  - {fileID: 11400000, guid: aad3cdf5667c18440ad90f0eda8e0b23, type: 2}
+  - {fileID: 11400000, guid: 87c8bce38aee58a4bb3f73837bd60cda, type: 2}
+  lootCounts: 010000000100000001000000

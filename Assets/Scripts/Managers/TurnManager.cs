@@ -20,7 +20,7 @@ public class TurnManager : MonoBehaviour
     public Player player;
 
 
-    public enum State { None, Busy, WaitingForPlayerInput, WaitingForEnemyInput, Ending }
+    public enum State { None, Busy, WaitingForPlayerInput, WaitingForEnemyInput, Ending, Win }
 
     public enum Choice { Attack, Item }
 
@@ -107,6 +107,18 @@ public class TurnManager : MonoBehaviour
                 //     }
                 // }
             }
+            else if (state == State.Ending)
+            {
+                if(BattleManager.instance.CheckForKillRequirement()) 
+                {
+                    ChangeState(State.WaitingForPlayerInput);
+                }
+                else
+                {
+                    ChangeState(State.None); //this should be when loot table should come up
+                    LootManager.instance.StartLooting();
+                }
+            }
         }
     }
 IEnumerator FinishTurn(Entity entity, State nextState)
@@ -145,7 +157,7 @@ IEnumerator DoEnemyTurns()
         }
     }
     checkingForEnemyAction = false;
-    ChangeState(State.WaitingForPlayerInput);
+    ChangeState(State.Ending);
 
 }
 

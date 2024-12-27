@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -43,7 +44,21 @@ public class LootManager : MonoBehaviour
         SetLootSlot(slot, testItem, 1);
     }
 
+    public void SetAllLoot(EncounterType enc)
+    {
+        for (int i = 0; i < enc.loot.Length; i++) 
+        { 
+            print("setting loot slot " + i + " to item: " + enc.loot[i].itemName);
+            SetLootSlot(i, enc.loot[i], enc.lootCounts[i]);
+        }
+    }
 
+    public void StartLooting()
+    {
+        SetAllLoot(BattleManager.instance.currentEncounter);
+        BattleManager.instance.increaseEncounterNumber();
+        OpenDisplay();
+    }
 
 
 }
