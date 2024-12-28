@@ -44,8 +44,6 @@ public class BattleManager : MonoBehaviour
         entityDatabase.RefreshDatabase();
         encounterSystem.RefreshDatabase();
 
-        currentEncounter = encounterList[encounterNumber];
-
         enemies = new EntitySlot[enemyBattlePositions.Length];
         enemyHealthBars = new HealthBar[enemyBattlePositions.Length];
 
@@ -102,7 +100,8 @@ public class BattleManager : MonoBehaviour
         }
 
         ClearEnemies();
-        
+        currentEncounter = encounterList[encounterNumber];
+
         for (int i = 0; i < enemies.Length; i++)
         {
             RemoveEnemy(i);
