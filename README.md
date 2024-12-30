@@ -35,11 +35,12 @@ To-Do: (* meaning big item)
 - enemy AI that does things other than attacking (ex. spawn other enemies based on condition, heal self/allies, multiple types of attacks, explode)
     - probably make enemy AI part of EntityDatabase as new type "NPCAI" with corresponding number as the entity in EntityDatabase
     - ideas for different AI functions: regular(thing(s) done by default like attacking or status), last stand (does something when below certain percent of health), revenge (does thing after ally dies)
+    - consider whether different enemy AI should be stored in one script with a bunch of settings that can be saved to scriptable objects, stored in individual scripts used on a prefab, or some other system
+        - if using prefabs, need to rework the enemy initialization system (refer to battlemanager.cs)
 - healthbar colors to indicate when things like last stand go off (kinda like being in yellow for torrent/overgrow/blaze boost in pokemon)
 - textbox system
 
 - think of potentially more efficient search system for item/entity/encounter (probably put entity ID on entity type itself for ease of searching for corresponding AI)
-
 
 IMPORTANT:
 - fix the visuals of the game
