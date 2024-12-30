@@ -12,6 +12,7 @@ public class WeaponInventoryManager : MonoBehaviour
     TMP_Text[] durabilityTextboxes;
     Button[] buttons;
     WeaponInventory weaponInventory;
+    public static bool weaponInventoryInitialized = false;
 
     void Awake()
     {
@@ -30,7 +31,7 @@ public class WeaponInventoryManager : MonoBehaviour
             durabilityTextboxes[i].text = "";
             buttons[i].interactable = false;
         }
-    
+        
     }
 
     void Start()

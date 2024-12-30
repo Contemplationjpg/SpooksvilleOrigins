@@ -31,9 +31,9 @@ public class WeaponPickup : MonoBehaviour
     {
         if (!PickedUp)
         {
-            Debug.Log("Picking up: " + weapon.itemName);
+            Debug.Log("Picking up weapon: " + weapon.itemName);
             bool wasPickedUp = WeaponInventory.instance.AddWeapon(weapon, durability);
-            Debug.Log("Picked up: " + wasPickedUp);
+            Debug.Log("Picked up weapon: " + wasPickedUp);
 
             if (wasPickedUp)
             {

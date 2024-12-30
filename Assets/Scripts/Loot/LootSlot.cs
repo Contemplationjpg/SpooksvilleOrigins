@@ -65,6 +65,7 @@ public class LootSlot : MonoBehaviour
             }
             else
             {
+                TurnManager.instance.player.ResetActionCount();
                 TurnManager.instance.ChangeState(TurnManager.State.WaitingForPlayerInput);
             }
             

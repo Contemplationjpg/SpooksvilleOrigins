@@ -15,13 +15,56 @@ public class Player : Entity
     public bool loadSaveOnAwake = false;
     public int loadNumber = 1;
 
+    public PlayerType playerType = null;
+
+    public int maxSugar = 100;
+    public int currentSugar = 0;
+    public int maxActionCount = 3;
+    public int currentActionCount = 3;
+
+
     
     public void Awake()
     {
         entityName = "Player";
+        entityType = playerType;
+
         if (loadSaveOnAwake)
         LoadPlayer(loadNumber);
+
+        maxSugar = playerType.maxSugar;
+        // Debug.Log("player max sugar set to " + maxSugar);
+        currentSugar = playerType.currentSugar;
+        // Debug.Log("player current sugar set to " + currentSugar);
+        maxActionCount = playerType.baseActionCount;
+        currentActionCount = maxActionCount;
+        // Debug.Log("player action count set to " + actionCount);
         BuildEntity();
+    }
+
+    public bool ChangeActionCount(int num)
+    {
+        if (currentActionCount+num < 0)
+        {
+            return false;
+        }
+        currentActionCount+=num;
+        return true;
+    }
+
+    public bool ChangeSugarAmount(int num)
+    {
+        if (currentSugar+num < 0)
+        {
+            return false;
+        }
+        currentSugar+=num;
+        return true;
+    }
+
+    public void ResetActionCount()
+    {
+        currentActionCount = maxActionCount;
     }
 
 

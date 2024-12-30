@@ -14,6 +14,7 @@ public class PlayerAttackTargettingHelper : MonoBehaviour
     public static bool checkingForMouse;
     public static PlayerAttackTargettingHelper instance;
     public List<Entity> targets;
+    public bool doingSpecial = false;
 
     void Awake()
     {
@@ -35,22 +36,26 @@ public class PlayerAttackTargettingHelper : MonoBehaviour
     {
         if (BattleManager.instance.newSelectedWeaponSlot<=WeaponInventory.instance.weapons.Length && newTarget != null)
         {
-            if (targets.Count>0)
+            if (targets.Count < WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.numberOfTargets)
             {
-                foreach (Entity e in targets)
+                if (targets.Count>0)
                 {
-                    if (e == newTarget)
+                    foreach (Entity e in targets)
                     {
-                        Debug.Log("Entity, " + newTarget.entityName + ", already in list of targets.");
-                        return;
+                        if (e == newTarget)
+                        {
+                            Debug.Log("Entity, " + newTarget.entityName + ", already in list of targets.");
+                            return;
+                        }
                     }
                 }
+                if (newTarget.isEnemy)
+                {
+                        Debug.Log("Adding entity, " + newTarget.entityName + ", to list of targets.");
+                        targets.Add(newTarget);
+                }
             }
-            if (newTarget.isEnemy)
-            {
-                    Debug.Log("Adding entity, " + newTarget.entityName + ", to list of targets.");
-                    targets.Add(newTarget);
-            }
+            
         }
     }
 
@@ -76,7 +81,7 @@ public class PlayerAttackTargettingHelper : MonoBehaviour
         UpdateVisibility();
     }
 
-    void UpdateVisibility()
+    public void UpdateVisibility()
     {
         if (!checkingForMouse)
         {
@@ -116,6 +121,11 @@ public class PlayerAttackTargettingHelper : MonoBehaviour
         SpriteRenderer spriteRenderer = newGameObject.GetComponent<SpriteRenderer>();
         arrow.transform.position = new Vector2(newGameObject.transform.position.x, newGameObject.transform.position.y+(spriteRenderer.size.y/2*newGameObject.transform.localScale.y)+.5f);
         Debug.Log("Moved Arrow to: (" + arrow.transform.position.x + ", " + arrow.transform.position.y + ").");
+    }
+
+    public void DoingSpecial(bool doing)
+    {
+        doingSpecial = doing;
     }
 
 

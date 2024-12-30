@@ -14,8 +14,8 @@ public class Entity : MonoBehaviour
     public bool requiredKill = false;
 
 
-    public int maxHealth = 100;
-    public int currentHealth = 100;
+    public int maxHealth;
+    public int currentHealth;
 
 
     //power, def, type, luck, attack delay (turns between attacks)
@@ -56,12 +56,33 @@ public class Entity : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (PlayerAttackTargettingHelper.checkingForMouse&&TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput&&BattleManager.instance.newSelectedWeaponSlot<=WeaponInventory.instance.weapons.Length)
+        if (PlayerAttackTargettingHelper.checkingForMouse&&TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput)  //&&BattleManager.instance.newSelectedWeaponSlot<=WeaponInventory.instance.weapons.Length)
         {
-            PlayerAttackTargettingHelper.instance.AttemptToAddTargetToList(this);
-            BattleManager.instance.LockInWeapon();
-            TurnManager.instance.choice = TurnManager.Choice.Attack;
-            TurnManager.instance.ChoiceChosen = true;
+            if (BattleManager.instance.newSelectedWeaponSlot<=WeaponInventory.instance.weapons.Length)
+            {
+                PlayerAttackTargettingHelper.instance.AttemptToAddTargetToList(this);
+                if (PlayerAttackTargettingHelper.instance.doingSpecial)
+                {
+                    if (WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.specialSugarCost <= TurnManager.instance.player.currentSugar)
+                    {
+                        BattleManager.instance.LockInWeapon();
+                        TurnManager.instance.choice = TurnManager.Choice.SpecialAttack;
+                        TurnManager.instance.ChoiceChosen = true;
+                    }
+                    else
+                    {
+                        PlayerAttackTargettingHelper.instance.ClearTargetList();
+                        TurnManager.instance.choice = TurnManager.Choice.Nothing;
+                    }
+                }
+                else
+                {
+                    BattleManager.instance.LockInWeapon();
+                    TurnManager.instance.choice = TurnManager.Choice.Attack;
+                    TurnManager.instance.ChoiceChosen = true;
+                }
+                
+            }
         }
     }
 

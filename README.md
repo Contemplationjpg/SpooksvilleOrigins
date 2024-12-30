@@ -21,6 +21,9 @@ Working on turn-based battle system...
     - currently using damage calculation formula
     - limitation of system now is that the number of enemy slots for the battlefield is modular to work with any amount but amount has to be set by the developer
     - able to queue encounters 
+    - player has multiple actions per turn 
+    - after picking a weapon, player can toggle for normal or special attack
+    - player has option to eat weapon
 
 To-Do: (* meaning big item)
 *- sugar/duability system

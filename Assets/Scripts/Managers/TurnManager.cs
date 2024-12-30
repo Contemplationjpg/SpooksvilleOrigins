@@ -16,13 +16,14 @@ public class TurnManager : MonoBehaviour
     public Choice choice;
     public bool ChoiceChosen = false;
     
+    public TMP_Text actionsDisplay;
     public TMP_Text turnDisplay;
     public Player player;
 
 
     public enum State { None, Busy, WaitingForPlayerInput, WaitingForEnemyInput, Ending, Win }
 
-    public enum Choice { Attack, Item }
+    public enum Choice { Attack, SpecialAttack, Eat, Nothing }
 
     public static TurnManager instance;
     private bool checkingForEnemyAction = false;
@@ -46,6 +47,7 @@ public class TurnManager : MonoBehaviour
     public void UpdateTurnDisplay()
     {
         turnDisplay.text = "Game State: " + state; 
+        actionsDisplay.text = "Actions Remaining: " + player.currentActionCount;
     }
     public void ChangeState(State changeTo)
     {
@@ -59,7 +61,11 @@ public class TurnManager : MonoBehaviour
         {
             if (state == State.WaitingForPlayerInput)
             {
-                if (ChoiceChosen)
+                if (player.currentActionCount<=0)
+                {
+                    ChangeState(State.WaitingForEnemyInput);
+                }
+                else if (ChoiceChosen)
                 {
                     ChoiceChosen = false;
                     ChangeState(State.Busy);
@@ -70,19 +76,47 @@ public class TurnManager : MonoBehaviour
                     BattleManager.instance.PlayerAttack(PlayerAttackTargettingHelper.instance.targets);
                     PlayerAttackTargettingHelper.instance.targets.Clear(); 
                     
-                    StartCoroutine(FinishTurn(player, State.WaitingForEnemyInput));
-
-
+                    player.ChangeActionCount(-1);
+                    UpdateTurnDisplay();
+                    // StartCoroutine(FinishTurn(player, State.WaitingForEnemyInput));
+                    StartCoroutine(ContinuePlayerTurn());
+                    
                     return;
 
-                    case 1: //Item
+                    case 1: //SpecialAttack
 
+                    player.GetComponentInParent<SimpleAnimation>().DoBigHop();
+                    BattleManager.instance.PlayerAttack(PlayerAttackTargettingHelper.instance.targets, true);
+                    PlayerAttackTargettingHelper.instance.targets.Clear(); 
+                    
+                    BattleManager.instance.playerSugar.ReduceSugar(WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.specialSugarCost);
+                    player.ChangeActionCount(-1);
+                    UpdateTurnDisplay();
+                    // StartCoroutine(FinishTurn(player, State.WaitingForEnemyInput));
+                    StartCoroutine(ContinuePlayerTurn());
                     return;
 
-                    default: //nothing????
-                    return;
+                    case 2: //Eat
+                    if (BattleManager.instance.EatWeapon())
+                    {
+                        player.ChangeActionCount(-1);
+                        UpdateTurnDisplay();
                     }
+                    StartCoroutine(ContinuePlayerTurn());
+                    
+                    return;
+
+                    case 3: //Nothing (AKA the choice wasn't valid)
+
+                    return;
+
+                    default: //even more nothing????
+                    return;
+
+                    }
+                    
                 }
+                
             }
             else if (state == State.WaitingForEnemyInput)
             {
@@ -111,7 +145,7 @@ public class TurnManager : MonoBehaviour
             {
                 if(BattleManager.instance.CheckForKillRequirement()) 
                 {
-                    ChangeState(State.WaitingForPlayerInput);
+                        ChangeState(State.WaitingForPlayerInput);
                 }
                 else
                 {
@@ -128,6 +162,28 @@ IEnumerator FinishTurn(Entity entity, State nextState)
     
     ChangeState(nextState);
 
+    yield break;
+}
+
+IEnumerator ContinuePlayerTurn()
+{
+    SimpleAnimation animation = player.GetComponentInParent<SimpleAnimation>();
+    yield return new WaitUntil(() => !animation.doingAnimation);
+    if(BattleManager.instance.CheckForKillRequirement()) 
+    {
+        if (player.currentActionCount>0)
+        {
+            ChangeState(State.WaitingForPlayerInput);
+        }
+        else
+        {
+            ChangeState(State.WaitingForEnemyInput);
+        }
+    }
+    else
+    {
+        ChangeState(State.Ending);
+    }
     yield break;
 }
 
@@ -157,6 +213,7 @@ IEnumerator DoEnemyTurns()
         }
     }
     checkingForEnemyAction = false;
+    player.ResetActionCount();
     ChangeState(State.Ending);
 
 }

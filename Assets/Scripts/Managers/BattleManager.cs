@@ -9,6 +9,7 @@ public class BattleManager : MonoBehaviour
 {
     public GameObject playerObject;
     public HealthBar playerHealth;
+    public SugarBar playerSugar;
     public EntitySlot[] enemies;
     public static bool playerInitialized = false;
     public ItemSystem itemDatabase;
@@ -57,11 +58,17 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
-        playerHealth.entity = player;
-        playerHealth.ShowHealthBar();
-        playerHealth.UpdateHealthBar();
+        InitializePlayerHealthBar();
+        InitializePlayerSugarBar();
         SpawnEncounter();
         // SetEncounterLoot();
+        StartCoroutine(LateStartForAddingWeapon());//debug
+    }
+
+    IEnumerator LateStartForAddingWeapon() //debug
+    { 
+        yield return new WaitForSeconds(.5f);
+        WeaponInventory.instance.AddTestWeapon();
     }
 
 
@@ -69,6 +76,20 @@ public class BattleManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void InitializePlayerHealthBar()
+    {
+        playerHealth.entity = player;
+        playerHealth.ShowHealthBar();
+        playerHealth.UpdateHealthBar();
+    }
+
+    void InitializePlayerSugarBar()
+    {
+        playerSugar.entity = player;
+        playerSugar.ShowSugarBar();
+        playerSugar.UpdateSugarBar();
     }
 
     public void ReduceEnemyHealthByOne(int healthBarNumber)
@@ -170,7 +191,7 @@ public class BattleManager : MonoBehaviour
         GameObject newEntity = new GameObject(entityType.entityName);
         SpriteRenderer sr = newEntity.AddComponent<SpriteRenderer>();
         BoxCollider2D bc2d = newEntity.AddComponent<BoxCollider2D>();
-        SimpleAnimation simpleAnimation = newEntity.AddComponent<SimpleAnimation>();
+        SimpleAnimation simpleAnimation = newEntity.AddComponent<SimpleAnimation>(); //replace to change animation
 
         Entity e = newEntity.AddComponent<Entity>();
         e.entityType = entityType;
@@ -275,7 +296,7 @@ public class BattleManager : MonoBehaviour
     {
         if(PlayerAttackTargettingHelper.instance.GetTarget()==enemies[slot].entityGO)
         {
-            PlayerAttackTargettingHelper.instance.HideArrow();
+            PlayerAttackTargettingHelper.instance.UpdateVisibility();
         }
         Destroy(enemies[slot].entityGO);
         enemies[slot].entity = null;
@@ -335,7 +356,7 @@ public class BattleManager : MonoBehaviour
         Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[selectedWeaponSlot].weapon.itemName);
     }
 
-    public void PlayerAttack(List<Entity> targets)
+    public void PlayerAttack(List<Entity> targets, bool special = false)
     {
         foreach(Entity e in targets)
         {
@@ -347,7 +368,16 @@ public class BattleManager : MonoBehaviour
                     {
                         int calcDamage = CalculateDamage(WeaponInventory.instance.weapons[selectedWeaponSlot].weapon, player, e);
                         Debug.Log("Entity, " + e.entityType.entityName + ", is being dealt " + calcDamage + " damage");
+
+                        if (special) //DEBUG TESTING SPECIAL ATTACKS
+                        {
+                            calcDamage+=15;
+                        }
+
                         enemyHealthBars[i].ReduceHealth(calcDamage);
+
+
+
                         if (enemyHealthBars[i].GetHealth() == 0)
                         {
                             RemoveEnemy(i);
@@ -412,6 +442,37 @@ public class BattleManager : MonoBehaviour
         else
         return false;
 
+    }
+
+    public void EatWeaponForTurn()
+    {
+        if (TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput)
+        {
+            LockInWeapon();
+            TurnManager.instance.choice = TurnManager.Choice.Eat;
+            TurnManager.instance.ChoiceChosen = true;
+        }
+        
+    }
+
+    public bool EatWeapon(int eatWeaponSlot = -1)
+    {
+        if (eatWeaponSlot<0)
+        {
+            eatWeaponSlot = selectedWeaponSlot;
+        }
+        if (WeaponInventory.instance.weapons[eatWeaponSlot].durability>0)
+        {
+            WeaponInventory.instance.ReduceDurability(eatWeaponSlot, 1);
+            playerSugar.IncreaseSugar(WeaponInventory.instance.weapons[eatWeaponSlot].weapon.sugarYield);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
+        
     }
 
 

@@ -8,7 +8,9 @@ public class WeaponInventory : MonoBehaviour
     public int maxInventorySpace = 4;
     public int currentInventorySpace = 0;
     public WeaponInventoryContainer[] weapons;
+    public Weapon testWeapon;
     public event Action OnWeaponChangedCallBack;
+    
 
     void Awake()
     {
@@ -104,7 +106,9 @@ public class WeaponInventory : MonoBehaviour
     }
 
 
-
+    public bool AddTestWeapon() {
+        return AddWeapon(testWeapon, testWeapon.maxDurability);
+    }
 
 
 }
