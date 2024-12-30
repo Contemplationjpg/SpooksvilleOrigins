@@ -39,3 +39,10 @@ To-Do: (* meaning big item)
 - textbox system
 
 - think of potentially more efficient search system for item/entity/encounter (probably put entity ID on entity type itself for ease of searching for corresponding AI)
+
+
+IMPORTANT:
+- fix the visuals of the game
+- things in the game should have a size they should be
+- in order to do this, decision needs to be made on if the game will use pixel art or vector art or hand-drawn
+- health bars and other UI should be included in (re)sizing

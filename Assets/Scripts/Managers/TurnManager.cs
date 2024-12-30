@@ -118,28 +118,14 @@ public class TurnManager : MonoBehaviour
                 }
                 
             }
-            else if (state == State.WaitingForEnemyInput)
+            else if (state == State.WaitingForEnemyInput) //enemy turn
             {
                 ChangeState(State.Busy);
                 
                 StartCoroutine(DoEnemyTurns());
 
-                // if (ChoiceChosen)
-                // {
-                //     switch ((int)choice)
-                //     {
-                //     case 0: //Attack
 
-                //     return;
 
-                //     case 1: //Item
-
-                //     return;
-
-                //     default: //nothing????
-                //     return;
-                //     }
-                // }
             }
             else if (state == State.Ending)
             {
@@ -201,7 +187,7 @@ IEnumerator DoEnemyTurns()
             // SimpleAnimation.instance.DoLittleHop(BattleManager.instance.enemyHealthBars[i].entity.ai.GetComponentInParent<Transform>());
             SimpleAnimation anima = currentEnemy.GetComponentInParent<SimpleAnimation>();
             anima.DoLittleHop();
-            currentEnemy.ai.EnemyAttack();
+            currentEnemy.ai.EnemyDecision();
             yield return new WaitUntil(() => !anima.doingAnimation);
             
             Debug.Log("Enemy " + i + " turn over.");

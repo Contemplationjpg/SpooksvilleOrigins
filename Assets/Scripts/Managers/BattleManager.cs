@@ -199,7 +199,7 @@ public class BattleManager : MonoBehaviour
 
         EnemyAI eAI = newEntity.AddComponent<EnemyAI>();
         eAI.enemy = e;
-        eAI.weapon = weaponDatabase.GetWeapon("Fists");
+        eAI.weapon = e.entityType.weapon; //weaponDatabase.GetWeapon("Fists");
         eAI.playerHealthBar = playerHealth;
         eAI.player = playerObject.GetComponent<Player>();
         eAI.SetUp();

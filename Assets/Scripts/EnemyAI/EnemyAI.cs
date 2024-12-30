@@ -12,10 +12,7 @@ public class EnemyAI : MonoBehaviour
 
     private BattleManager battleManager;
     public Player player;
-    
 
-    private int attackDelay;
-    public int attackTimer = 1;
 
 
     void Awake()
@@ -25,18 +22,12 @@ public class EnemyAI : MonoBehaviour
 
     public void SetUp()
     {
-        attackDelay = enemy.attackDelay;
+        
     }
 
     public void EnemyDecision()
     {
-        if(attackTimer == attackDelay)
-        {
-            EnemyAttack();
-            attackTimer = 0;
-        }
-        else
-        attackTimer++;
+        EnemyAttack();
     }
 
     public void EnemyAttack()
