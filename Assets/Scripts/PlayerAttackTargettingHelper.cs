@@ -36,7 +36,16 @@ public class PlayerAttackTargettingHelper : MonoBehaviour
     {
         if (BattleManager.instance.newSelectedWeaponSlot<=WeaponInventory.instance.weapons.Length && newTarget != null)
         {
-            if (targets.Count < WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.numberOfTargets)
+            int maxTargets = 0;
+            if (BattleManager.instance.newSelectedWeaponSlot < 0)
+            {
+                maxTargets = BattleManager.instance.defaultWeapon.numberOfTargets;
+            }
+            else
+            {
+                maxTargets = WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.numberOfTargets;
+            }
+            if (targets.Count < maxTargets)
             {
                 if (targets.Count>0)
                 {
@@ -119,8 +128,8 @@ public class PlayerAttackTargettingHelper : MonoBehaviour
     {
         CurrentTarget = newGameObject;
         SpriteRenderer spriteRenderer = newGameObject.GetComponent<SpriteRenderer>();
-        arrow.transform.position = new Vector2(newGameObject.transform.position.x, newGameObject.transform.position.y+(spriteRenderer.size.y/2*newGameObject.transform.localScale.y)+.5f);
-        Debug.Log("Moved Arrow to: (" + arrow.transform.position.x + ", " + arrow.transform.position.y + ").");
+        arrow.transform.position = new Vector2(newGameObject.transform.position.x, newGameObject.transform.position.y+(spriteRenderer.size.y/2*newGameObject.transform.localScale.y)+.25f);
+        // Debug.Log("Moved Arrow to: (" + arrow.transform.position.x + ", " + arrow.transform.position.y + ").");
     }
 
     public void DoingSpecial(bool doing)

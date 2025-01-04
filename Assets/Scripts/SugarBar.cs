@@ -33,13 +33,13 @@ public class SugarBar : MonoBehaviour
 
     public void HideSugarBar()
     {
-        Debug.Log("setting sugarbar to deactive");
+        // Debug.Log("setting sugarbar to deactive");
         sugarBarGO.SetActive(false);
     }
 
     public void ShowSugarBar()
     {
-        Debug.Log("setting sugarbar to active");
+        // Debug.Log("setting sugarbar to active");
         sugarBarGO.SetActive(true);
     }
 

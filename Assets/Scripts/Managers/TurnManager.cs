@@ -27,6 +27,7 @@ public class TurnManager : MonoBehaviour
 
     public static TurnManager instance;
     private bool checkingForEnemyAction = false;
+    public bool doingEnemyAction = false;
     private void Awake()
     {
         instance = this;
@@ -186,7 +187,7 @@ IEnumerator DoEnemyTurns()
             // BattleManager.instance.enemyHealthBars[i].entity.ai.EnemyDecision();
             // SimpleAnimation.instance.DoLittleHop(BattleManager.instance.enemyHealthBars[i].entity.ai.GetComponentInParent<Transform>());
             SimpleAnimation anima = currentEnemy.GetComponentInParent<SimpleAnimation>();
-            anima.DoLittleHop();
+            // anima.DoLittleHop();
             currentEnemy.ai.EnemyDecision();
             yield return new WaitUntil(() => !anima.doingAnimation);
             

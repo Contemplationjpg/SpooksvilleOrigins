@@ -9,11 +9,13 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
 
+    public bool isEnemy = true;
+
     public Entity entity;
     public GameObject healthBarGO;
     private Slider healthBar;
     private TMP_Text healthText;
-    
+    private SpriteRenderer itemSR;
     
 
     public void Awake()
@@ -27,19 +29,22 @@ public class HealthBar : MonoBehaviour
     {
         healthBar = healthBarGO.GetComponent<Slider>();
         healthText = healthBarGO.GetComponentInChildren<TMP_Text>();
-
+        if (isEnemy)
+        {
+            itemSR = healthBarGO.GetComponentInChildren<SpriteRenderer>();
+        }
         healthBar.minValue = 0;
     }
 
     public void HideHealthBar()
     {
-        Debug.Log("setting healthbar to deactive");
+        // Debug.Log("setting healthbar to deactive");
         healthBarGO.SetActive(false);
     }
 
     public void ShowHealthBar()
     {
-        Debug.Log("setting healthbar to active");
+        // Debug.Log("setting healthbar to active");
         healthBarGO.SetActive(true);
     }
 
@@ -99,6 +104,15 @@ public class HealthBar : MonoBehaviour
         string newHealthText = healthBar.value.ToString() + "/" + entity.maxHealth;
         healthText.text = newHealthText;
     }
+
+    public void SetWeapon()
+    {
+        if (isEnemy)
+        {
+            itemSR.sprite = entity.entityType.weapon.icon;    
+        }
+        
+    }
     
     public void UpdateHealthBar()
     {
@@ -112,6 +126,11 @@ public class HealthBar : MonoBehaviour
         {
             Debug.Log("No Entity Set For HealthBar");
         }
+    }
+
+    public void InitializeSpriteRenderer()
+    {
+        
     }
 
 }

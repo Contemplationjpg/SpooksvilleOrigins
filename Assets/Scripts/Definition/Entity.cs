@@ -49,7 +49,7 @@ public class Entity : MonoBehaviour
     {
             if (PlayerAttackTargettingHelper.checkingForMouse&&isEnemy)
             {
-                Debug.Log("Mouse Hovered: " + entityName);
+                // Debug.Log("Mouse Hovered: " + entityName);
                 PlayerAttackTargettingHelper.instance.UpdateArrowPosition(gameObject);
             }
     }
@@ -58,30 +58,40 @@ public class Entity : MonoBehaviour
     {
         if (PlayerAttackTargettingHelper.checkingForMouse&&TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput)  //&&BattleManager.instance.newSelectedWeaponSlot<=WeaponInventory.instance.weapons.Length)
         {
-            if (BattleManager.instance.newSelectedWeaponSlot<=WeaponInventory.instance.weapons.Length)
+            if (BattleManager.instance.newSelectedWeaponSlot < 0)
             {
                 PlayerAttackTargettingHelper.instance.AttemptToAddTargetToList(this);
-                if (PlayerAttackTargettingHelper.instance.doingSpecial)
+                BattleManager.instance.LockInWeapon();
+                TurnManager.instance.choice = TurnManager.Choice.Attack;
+                TurnManager.instance.ChoiceChosen = true;
+            }
+            else
+            if (BattleManager.instance.newSelectedWeaponSlot<=WeaponInventory.instance.weapons.Length)
+            {
+                if (WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.attackDurabilityCost <= WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].durability)
                 {
-                    if (WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.specialSugarCost <= TurnManager.instance.player.currentSugar)
+                    PlayerAttackTargettingHelper.instance.AttemptToAddTargetToList(this);
+                    if (PlayerAttackTargettingHelper.instance.doingSpecial)
                     {
-                        BattleManager.instance.LockInWeapon();
-                        TurnManager.instance.choice = TurnManager.Choice.SpecialAttack;
-                        TurnManager.instance.ChoiceChosen = true;
+                        if (WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.specialSugarCost <= TurnManager.instance.player.currentSugar)
+                        {
+                            BattleManager.instance.LockInWeapon();
+                            TurnManager.instance.choice = TurnManager.Choice.SpecialAttack;
+                            TurnManager.instance.ChoiceChosen = true;
+                        }
+                        else
+                        {
+                            PlayerAttackTargettingHelper.instance.ClearTargetList();
+                            TurnManager.instance.choice = TurnManager.Choice.Nothing;
+                        }
                     }
                     else
                     {
-                        PlayerAttackTargettingHelper.instance.ClearTargetList();
-                        TurnManager.instance.choice = TurnManager.Choice.Nothing;
+                        BattleManager.instance.LockInWeapon();
+                        TurnManager.instance.choice = TurnManager.Choice.Attack;
+                        TurnManager.instance.ChoiceChosen = true;
                     }
                 }
-                else
-                {
-                    BattleManager.instance.LockInWeapon();
-                    TurnManager.instance.choice = TurnManager.Choice.Attack;
-                    TurnManager.instance.ChoiceChosen = true;
-                }
-                
             }
         }
     }

@@ -19,7 +19,7 @@ public class Dialogue : MonoBehaviour
     {
         textComponent.text = string.Empty;
         dialogueRunning = false;
-        Debug.Log("dialogueRunning = false");
+        // Debug.Log("dialogueRunning = false");
     }
 
     void Update()

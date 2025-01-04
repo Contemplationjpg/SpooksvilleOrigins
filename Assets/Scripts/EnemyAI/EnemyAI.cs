@@ -27,6 +27,8 @@ public class EnemyAI : MonoBehaviour
 
     public void EnemyDecision()
     {
+        SimpleAnimation anim = GetComponent<SimpleAnimation>();
+        anim.DoLeftSlide();
         EnemyAttack();
     }
 

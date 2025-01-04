@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -27,10 +28,18 @@ public class BattleManager : MonoBehaviour
     
     public Transform[] enemyBattlePositions;
 
+    public Weapon defaultWeapon;
+    public Image defaultWeaponSprite;
+    public event Action OnWeaponSelectedCallback;
+    public event Action OnDefaultWeaponChanged;
+
 
 
     private Player player;
     public static BattleManager instance;
+
+    public static int selectedWeaponSlot = -1;
+    public int newSelectedWeaponSlot = -1;
 
 
 
@@ -39,6 +48,7 @@ public class BattleManager : MonoBehaviour
         instance = this;
         playerInitialized = false;
         player = playerObject.GetComponent<Player>();
+        defaultWeapon = player.playerType.weapon;
         playerInitialized = true;
         weaponDatabase.RefreshDatabase();
         itemDatabase.RefreshDatabase();
@@ -71,7 +81,11 @@ public class BattleManager : MonoBehaviour
         WeaponInventory.instance.AddTestWeapon();
     }
 
-
+    void UpdateDefaultWeapon()
+    {
+        defaultWeapon = player.playerType.weapon;
+        OnDefaultWeaponChanged.Invoke();
+    }
 
     void Update()
     {
@@ -133,7 +147,7 @@ public class BattleManager : MonoBehaviour
             {
                 break;
             }
-            Debug.Log("attempting to make encounter enemy: " + currentEncounter.enemies[i].entityName);
+            // Debug.Log("attempting to make encounter enemy: " + currentEncounter.enemies[i].entityName);
             CreateEntity(currentEncounter.enemies[i]);
         }
         for (int i = 0; i < currentEncounter.killReqs.Length; i++) 
@@ -160,7 +174,7 @@ public class BattleManager : MonoBehaviour
         {
             if (!enemies[i].taken)
             {
-                Debug.Log("Earliest entity slot available is at slot " + earliestSlot);
+                // Debug.Log("Earliest entity slot available is at slot " + earliestSlot);
                 return earliestSlot;
             }
             earliestSlot++;
@@ -190,6 +204,7 @@ public class BattleManager : MonoBehaviour
     {
         GameObject newEntity = new GameObject(entityType.entityName);
         SpriteRenderer sr = newEntity.AddComponent<SpriteRenderer>();
+        sr.flipX = true; //flips x (intended for enemies)
         BoxCollider2D bc2d = newEntity.AddComponent<BoxCollider2D>();
         SimpleAnimation simpleAnimation = newEntity.AddComponent<SimpleAnimation>(); //replace to change animation
 
@@ -246,10 +261,11 @@ public class BattleManager : MonoBehaviour
                 enemyHealthBars[earliestSlot].entity = newEntity.GetComponent<Entity>();
                 enemyHealthBars[earliestSlot].ShowHealthBar();
                 enemyHealthBars[earliestSlot].UpdateHealthBar();
+                enemyHealthBars[earliestSlot].SetWeapon();
                 
 
 
-                Debug.Log("Created entity, " + entityType.entityName + ", at slot " + earliestSlot);
+                // Debug.Log("Created entity, " + entityType.entityName + ", at slot " + earliestSlot);
                 return true;
             }
             else
@@ -336,8 +352,7 @@ public class BattleManager : MonoBehaviour
         return enemySlot;
     }
 
-    public static int selectedWeaponSlot;
-    public int newSelectedWeaponSlot;
+    
 
     public void SelectNewWeapon(int newWeaponInventorySlot)
     {
@@ -347,12 +362,29 @@ public class BattleManager : MonoBehaviour
             Debug.Log("Hovered weapon slot: " + newSelectedWeaponSlot);
             // Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[newSelectedWeaponSlot].weapon.itemName);
             PlayerAttackTargettingHelper.instance.ChangeCheckBool(true);
+            OnWeaponSelectedCallback.Invoke();
+        }
+    }
+
+    public void SelectDefaultWeapon()
+    {
+        if (TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput)
+        {
+            newSelectedWeaponSlot = -1;
+            Debug.Log("Hovered weapon slot: default");
+            // Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[newSelectedWeaponSlot].weapon.itemName);
+            PlayerAttackTargettingHelper.instance.ChangeCheckBool(true);
         }
     }
 
     public void LockInWeapon()
     {
         selectedWeaponSlot = newSelectedWeaponSlot;
+        if (selectedWeaponSlot < 0)
+        {
+            Debug.Log("Selected new weapon: " + defaultWeapon.itemName);
+        }
+        else
         Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[selectedWeaponSlot].weapon.itemName);
     }
 
@@ -364,39 +396,54 @@ public class BattleManager : MonoBehaviour
             {
                 if(enemyHealthBars[i].entity == e)
                 {
-                    if(WeaponInventory.instance.GetDurability(selectedWeaponSlot)>0)
+                    if (selectedWeaponSlot<0)
                     {
-                        int calcDamage = CalculateDamage(WeaponInventory.instance.weapons[selectedWeaponSlot].weapon, player, e);
+                        int calcDamage;
+                        calcDamage = CalculateDamage(defaultWeapon, player, e, special);
                         Debug.Log("Entity, " + e.entityType.entityName + ", is being dealt " + calcDamage + " damage");
-
-                        if (special) //DEBUG TESTING SPECIAL ATTACKS
-                        {
-                            calcDamage+=15;
-                        }
-
                         enemyHealthBars[i].ReduceHealth(calcDamage);
-
-
-
-                        if (enemyHealthBars[i].GetHealth() == 0)
-                        {
-                            RemoveEnemy(i);
-                        }
-                        WeaponInventory.instance.ReduceDurability(selectedWeaponSlot,1);    
                     }
+                    else
+                    {
+                        if(WeaponInventory.instance.GetDurability(selectedWeaponSlot)>0)
+                        {
+                            int calcDamage;
+                            calcDamage = CalculateDamage(WeaponInventory.instance.weapons[selectedWeaponSlot].weapon, player, e, special);
+                            Debug.Log("Entity, " + e.entityType.entityName + ", is being dealt " + calcDamage + " damage");
+
+                            // if (special) //DEBUG TESTING SPECIAL ATTACKS
+                            // {
+                            //     calcDamage+=15;
+                            // }
+                            enemyHealthBars[i].ReduceHealth(calcDamage);
+                            WeaponInventory.instance.ReduceDurability(selectedWeaponSlot, WeaponInventory.instance.weapons[selectedWeaponSlot].weapon.attackDurabilityCost);
+                        }
+                    }
+                    
+
+                    if (enemyHealthBars[i].GetHealth() == 0)
+                    {
+                        RemoveEnemy(i);
+                    }
+                            
+                    
                 }
             }
         }
     }
 
-    public int CalculateDamage(Weapon weapon, Entity attacker, Entity defender)
+    public int CalculateDamage(Weapon weapon, Entity attacker, Entity defender, bool special = false)
     {
         Debug.Log("Performing Damage Calculation:");
         //calc damage using attacker's atk & defender's def weapondmg*attackerpwr*(25/25+defenderdef)
         // Debug.Log(weapon.damage + " weapon damage");
         // Debug.Log(attacker.power + " attacker power");
         // Debug.Log(defender.defense + " defender defense");
-        float preroundedDamage = weapon.damage * attacker.power;
+        float preroundedDamage;
+        if (!special)
+        preroundedDamage = weapon.damage * attacker.power;
+        else
+        preroundedDamage = weapon.specialDamage * attacker.power;
         float defenseMulti = 25+defender.defense;
         // Debug.Log(defenseMulti + " defenseMulti before being divided");
 
@@ -431,7 +478,7 @@ public class BattleManager : MonoBehaviour
 
     private bool RollForCrit(Weapon weapon, Entity attacker)
     {
-        float rand = Random.Range(0f, 100f);
+        float rand = UnityEngine.Random.Range(0f, 100f);
         Debug.Log("Crit roll: " + rand);
         float critChance = attacker.luck + weapon.critChanceBoost;
         Debug.Log("Crit chance: " + critChance);

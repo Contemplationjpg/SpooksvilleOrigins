@@ -19,15 +19,18 @@ MonoBehaviour:
   isDefaultItem: 0
   isStackable: 0
   maxStackSize: 99
-  damage: 10
+  damage: 40
   damageBonus: 13
-  specialDamage: 20
+  attackDurabilityCost: 5
+  specialDamage: 70
   specialDamageBonus: 25
+  specialSugarCost: 10
   critChanceBoost: 0
   canCrit: 1
   critMult: 1.5
   damageType: fire
-  maxDurability: 32
+  maxDurability: 40
   numberOfTargets: 1
+  sugarYield: 20
   attackTime: 1
   specialAttackTime: 1

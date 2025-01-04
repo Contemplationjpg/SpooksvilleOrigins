@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Billy
   displayName: Billy
-  sprite: {fileID: 21300000, guid: f50fa29b8f364f444b45917cb5693dcc, type: 3}
+  sprite: {fileID: 21300000, guid: 832c8f32ef9029e4fb87ac557808e684, type: 3}
   isEnemy: 0
+  ai: {fileID: 0}
+  weapon: {fileID: 11400000, guid: cda743779ab8ae64baac18a6e3acf683, type: 2}
   maxHealth: 200
   currentHealth: 200
   defense: 3
@@ -26,3 +28,4 @@ MonoBehaviour:
   attackDelay: 0
   currentSugar: 50
   maxSugar: 100
+  baseActionCount: 3

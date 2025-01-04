@@ -9,6 +9,7 @@ public class Weapon : Item
 {
     public int damage = 10;
     public int damageBonus = 13;
+    public int attackDurabilityCost = 1;
     public int specialDamage = 20;
     public int specialDamageBonus = 25;
     public int specialSugarCost = 10;

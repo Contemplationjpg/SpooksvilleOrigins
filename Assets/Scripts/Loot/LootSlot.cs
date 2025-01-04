@@ -49,7 +49,8 @@ public class LootSlot : MonoBehaviour
         }
         catch (Exception ex)
         {
-            print("could not give item in LootSlot");
+            Debug.LogException(ex);
+            Debug.LogWarning("could not give item in LootSlot");
             return false;
         }
     }

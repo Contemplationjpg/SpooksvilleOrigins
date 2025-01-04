@@ -9,6 +9,7 @@ public class WeaponInventory : MonoBehaviour
     public int currentInventorySpace = 0;
     public WeaponInventoryContainer[] weapons;
     public Weapon testWeapon;
+    public Weapon defaultWeapon;
     public event Action OnWeaponChangedCallBack;
     
 
@@ -21,6 +22,11 @@ public class WeaponInventory : MonoBehaviour
         }
         weapons = new WeaponInventoryContainer[maxInventorySpace];
         instance = this;
+    }
+
+    void Start()
+    {
+        defaultWeapon = BattleManager.instance.defaultWeapon;
     }
 
     public bool AddWeapon(Weapon weapon, int durability)
