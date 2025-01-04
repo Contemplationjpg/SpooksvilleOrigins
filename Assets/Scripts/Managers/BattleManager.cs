@@ -434,7 +434,7 @@ public class BattleManager : MonoBehaviour
 
     public int CalculateDamage(Weapon weapon, Entity attacker, Entity defender, bool special = false)
     {
-        Debug.Log("Performing Damage Calculation:");
+        // Debug.Log("Performing Damage Calculation:");
         //calc damage using attacker's atk & defender's def weapondmg*attackerpwr*(25/25+defenderdef)
         // Debug.Log(weapon.damage + " weapon damage");
         // Debug.Log(attacker.power + " attacker power");
@@ -452,12 +452,12 @@ public class BattleManager : MonoBehaviour
         // Debug.Log(defenseMulti + " defenseMulti after being divided");
 
         preroundedDamage *= defenseMulti;
-        Debug.Log(preroundedDamage + " prerounded damage");
+        // Debug.Log(preroundedDamage + " prerounded damage");
         
         //check if special weakness, if so then do math for damage
-        if (weapon.damageType == defender.entityType.weaknessTag)
+        if (weapon.damageType == defender.entityType.weaknessTag && weapon.damageType != "")
         {
-            Debug.Log("Weakness to " + weapon.damageType + " found!");
+            // Debug.Log("Weakness to " + weapon.damageType + " found!");
             preroundedDamage*=1.25f;
             Debug.Log(preroundedDamage + " prerounded damage post weakness check");
         }
@@ -479,9 +479,9 @@ public class BattleManager : MonoBehaviour
     private bool RollForCrit(Weapon weapon, Entity attacker)
     {
         float rand = UnityEngine.Random.Range(0f, 100f);
-        Debug.Log("Crit roll: " + rand);
+        // Debug.Log("Crit roll: " + rand);
         float critChance = attacker.luck + weapon.critChanceBoost;
-        Debug.Log("Crit chance: " + critChance);
+        // Debug.Log("Crit chance: " + critChance);
         if (critChance>=rand)
         {
             return true;

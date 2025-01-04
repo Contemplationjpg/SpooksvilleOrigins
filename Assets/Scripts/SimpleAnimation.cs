@@ -84,7 +84,7 @@ public class SimpleAnimation : MonoBehaviour
                 yield break;
             }
         }
-        Debug.Log("Finished Going Up");
+        // Debug.Log("Finished Going Up");
         timer = 0;
         while(timer < halfwayTime)
         {
@@ -116,7 +116,7 @@ public class SimpleAnimation : MonoBehaviour
         
 
         gO.transform.position = originalPosition;
-        Debug.Log("Finished Going Down");
+        // Debug.Log("Finished Going Down");
         doingAnimation = false;
         yield return null;
     }
@@ -168,7 +168,7 @@ public class SimpleAnimation : MonoBehaviour
                 yield break;
             }
         }
-        Debug.Log("Finished Going Up");
+        // Debug.Log("Finished Going Up");
         timer = 0;
         while(timer < halfwayTime)
         {
@@ -200,7 +200,7 @@ public class SimpleAnimation : MonoBehaviour
         
 
         gO.transform.position = originalPosition;
-        Debug.Log("Finished Going Down");
+        // Debug.Log("Finished Going Down");
         doingAnimation = false;
         yield return null;
     }
@@ -242,7 +242,7 @@ public class SimpleAnimation : MonoBehaviour
                 yield break;
             }
         }
-        Debug.Log("Finished Moving Forward");
+        // Debug.Log("Finished Moving Forward");
         timer = 0;
         while(timer < halfwayTime)
         {
@@ -262,7 +262,7 @@ public class SimpleAnimation : MonoBehaviour
         }
 
         gO.transform.position = originalPosition;
-        Debug.Log("Finished Moving Back");
+        // Debug.Log("Finished Moving Back");
         doingAnimation = false;
         yield return null;
     }
@@ -304,7 +304,7 @@ public class SimpleAnimation : MonoBehaviour
                 yield break;
             }
         }
-        Debug.Log("Finished Moving Forward");
+        // Debug.Log("Finished Moving Forward");
         timer = 0;
         while(timer < halfwayTime)
         {
@@ -324,7 +324,7 @@ public class SimpleAnimation : MonoBehaviour
         }
 
         gO.transform.position = originalPosition;
-        Debug.Log("Finished Moving Back");
+        // Debug.Log("Finished Moving Back");
         doingAnimation = false;
         yield return null;
     }

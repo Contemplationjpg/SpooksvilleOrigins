@@ -60,7 +60,7 @@ public class PlayerAttackTargettingHelper : MonoBehaviour
                 }
                 if (newTarget.isEnemy)
                 {
-                        Debug.Log("Adding entity, " + newTarget.entityName + ", to list of targets.");
+                        // Debug.Log("Adding entity, " + newTarget.entityName + ", to list of targets.");
                         targets.Add(newTarget);
                 }
             }

@@ -698,7 +698,7 @@ MonoBehaviour:
   encounterNumber: 0
   encounterList:
   - {fileID: 11400000, guid: bbfcf0439b0728f46b9453f00775c35b, type: 2}
-  - {fileID: 11400000, guid: cc979df34710fb84b95de126771d6b79, type: 2}
+  - {fileID: 11400000, guid: bbfcf0439b0728f46b9453f00775c35b, type: 2}
   enemyBattlePositions:
   - {fileID: 1226316695}
   - {fileID: 1919402043}
@@ -10184,7 +10184,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1863851468
 RectTransform:
   m_ObjectHideFlags: 0
