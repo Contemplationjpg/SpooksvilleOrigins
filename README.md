@@ -25,12 +25,18 @@ Working on turn-based battle system...
     - after picking a weapon, player can toggle for normal or special attack
     - player has option to eat weapon
 
-To-Do: (* meaning big item)
-*- sugar/duability system
-- battle UI
+Art Progress:
+    - resized game to be 320 x 180
+    - no music yet
+    - only have temp sprites for billy, skeleton, fist
+
+To-Do: (* meaning big item) (s = started, a = always, f = finished)
+*- sugar/duability system (s)
+- battle UI (a)
 - animation for dealing damage (probably add screen-shake dependent on raw damage number or percent of damage done to enemy)
-- items that do things (ex. heal, increase sugar, increase stat)
-- stat modifier system
+*- items that do things (ex. heal, increase sugar, increase stat)
+*- stat modifier system
+*- partner system
 *- perk system 
 - enemy AI that does things other than attacking (ex. spawn other enemies based on condition, heal self/allies, multiple types of attacks, explode)
     - probably make enemy AI part of EntityDatabase as new type "NPCAI" with corresponding number as the entity in EntityDatabase
@@ -47,3 +53,12 @@ IMPORTANT:
 - things in the game should have a size they should be
 - in order to do this, decision needs to be made on if the game will use pixel art or vector art or hand-drawn
 - health bars and other UI should be included in (re)sizing
+
+
+
+
+
+Visuals/Art:
+- UI elements
+- More Sprites (Characters, Weapons, Items)
+- Actual Backgrounds
