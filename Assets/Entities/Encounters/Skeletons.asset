@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a5ef05e6bd55c042b79bff3854398ae, type: 3}
   m_Name: Skeletons
   m_EditorClassIdentifier: 
-  encounterName: default name
+  encounterName: Skeletons
   enemies:
   - {fileID: 11400000, guid: 87f718918bb612c498a11da789679280, type: 2}
   - {fileID: 11400000, guid: 87f718918bb612c498a11da789679280, type: 2}
@@ -21,6 +21,6 @@ MonoBehaviour:
   killReqs: 00000000010000000200000003000000
   loot:
   - {fileID: 11400000, guid: 27b9703da8e508f478396644c8bf595e, type: 2}
-  - {fileID: 11400000, guid: aad3cdf5667c18440ad90f0eda8e0b23, type: 2}
+  - {fileID: 11400000, guid: 434f0f9f5ab3aa942acb4dd1ce45adc9, type: 2}
   - {fileID: 11400000, guid: aad3cdf5667c18440ad90f0eda8e0b23, type: 2}
   lootCounts: 010000000100000001000000
