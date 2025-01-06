@@ -128,7 +128,7 @@ public class PlayerAttackTargettingHelper : MonoBehaviour
     {
         CurrentTarget = newGameObject;
         SpriteRenderer spriteRenderer = newGameObject.GetComponent<SpriteRenderer>();
-        arrow.transform.position = new Vector2(newGameObject.transform.position.x, newGameObject.transform.position.y+(spriteRenderer.size.y/2*newGameObject.transform.localScale.y)+.25f);
+        arrow.transform.position = new Vector2(newGameObject.transform.position.x, newGameObject.transform.position.y+(spriteRenderer.size.y/2*newGameObject.transform.localScale.y)+.05f);
         // Debug.Log("Moved Arrow to: (" + arrow.transform.position.x + ", " + arrow.transform.position.y + ").");
     }
 

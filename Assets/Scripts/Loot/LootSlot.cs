@@ -62,11 +62,13 @@ public class LootSlot : MonoBehaviour
             LootManager.instance.CloseDisplay();
             if (!BattleManager.instance.SpawnEncounter()) 
             {
+                TurnManager.instance.ChangePlayerActionable(false);
                 TurnManager.instance.ChangeState(TurnManager.State.Win);
             }
             else
             {
                 TurnManager.instance.player.ResetActionCount();
+                TurnManager.instance.ChangePlayerActionable(true);
                 TurnManager.instance.ChangeState(TurnManager.State.WaitingForPlayerInput);
             }
             

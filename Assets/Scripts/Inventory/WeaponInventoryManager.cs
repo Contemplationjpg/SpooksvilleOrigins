@@ -18,7 +18,8 @@ public class WeaponInventoryManager : MonoBehaviour
     public static bool weaponInventoryInitialized = false;
     public Image defaultSlot;
     // Image defaultSlotIcon;
-    // Button defaultButton;
+    Button defaultButton;
+    public bool isPlayerActionable = false;
 
 
 
@@ -41,7 +42,7 @@ public class WeaponInventoryManager : MonoBehaviour
         }
 
         // defaultSlotIcon = defaultSlot.GetComponent<Image>();
-        // defaultButton = defaultSlot.GetComponent<Button>();
+        defaultButton = defaultSlot.GetComponent<Button>();
 
         // defaultSlotIcon.color = new Color32(255,255,255,0);
         // defaultButton.interactable = true;
@@ -56,7 +57,10 @@ public class WeaponInventoryManager : MonoBehaviour
         weaponInventory.OnWeaponChangedCallBack += UpdateWeaponUI;
         BattleManager.instance.OnWeaponSelectedCallback += UpdateSelectedWeaponUI;
         BattleManager.instance.OnDefaultWeaponChanged += UpdateDefaultWeaponUI;
+        TurnManager.instance.PlayerActionable += MakePlayerActionable;
+        TurnManager.instance.PlayerNonActionable += MakePlayerInactionable;
         UpdateDefaultWeaponUI();
+        InitializeButtons();
     }
 
     public void ResetWeaponUI()
@@ -84,7 +88,7 @@ public class WeaponInventoryManager : MonoBehaviour
                         slotIcons[i].color = new Color32(255,255,255,255);
                         slotIcons[i].sprite = weaponInventory.weapons[i].weapon.icon;
                         durabilityTextboxes[i].text = weaponInventory.weapons[i].durability.ToString();
-                        buttons[i].interactable = true;
+                        buttons[i].interactable = isPlayerActionable;
                         WeaponInventoryContainer thisWeapon = weaponInventory.weapons[i];
                         int currentInventorySlot = i;
                         buttons[i].onClick.AddListener(() => BattleManager.instance.SelectNewWeapon(currentInventorySlot));
@@ -123,11 +127,60 @@ public class WeaponInventoryManager : MonoBehaviour
         
     }
 
+    void MakePlayerActionable()
+    {
+        isPlayerActionable = true;
+        EnableAllButtons();
+    }
+
+    void MakePlayerInactionable()
+    {
+        isPlayerActionable = false;
+        DisableAllButtons();
+    }
+    void EnableAllButtons()
+    {
+        Debug.Log("Enabling Weapon Buttons");
+        for(int i = 0; i < weaponSlots.Length;i++)
+        {
+            if (weaponInventory.weapons[i] != null)
+            {
+                buttons[i].interactable = true;    
+            }
+        }
+        defaultButton.interactable = true;
+    }
+
+    void DisableAllButtons()
+    {
+        Debug.Log("Disabling Weapon Buttons");
+        foreach(Button b in buttons)
+        {
+            b.interactable = false;
+        }
+        defaultButton.interactable = false;
+    }
+
+    void ToggleAllSlotButtonInteractability(bool toggle)
+    {
+        if (toggle)
+        EnableAllButtons();
+        else
+        DisableAllButtons();
+    }
+
     IEnumerator InitializeDefaultWeapon()
     {
         yield return new WaitUntil(()=>BattleManager.playerInitialized = true);
         Debug.Log("Initializing Default Weapon");
+        InitializeButtons();
         UpdateDefaultWeaponUI();
+    }
+
+    void InitializeButtons()
+    {
+        ToggleAllSlotButtonInteractability(true);
+        ToggleAllSlotButtonInteractability(false);
     }
 
 

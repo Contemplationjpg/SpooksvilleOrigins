@@ -79,6 +79,7 @@ public class BattleManager : MonoBehaviour
     { 
         yield return new WaitForSeconds(.5f);
         WeaponInventory.instance.AddTestWeapon();
+        TurnManager.instance.StartBattle();
     }
 
     void UpdateDefaultWeapon()
@@ -520,6 +521,12 @@ public class BattleManager : MonoBehaviour
         }
         
         
+    }
+
+    public void PassTurn()
+    {
+        TurnManager.instance.choice = TurnManager.Choice.PassTurn;
+        TurnManager.instance.ChoiceChosen = true;
     }
 
 

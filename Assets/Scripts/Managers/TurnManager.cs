@@ -23,11 +23,13 @@ public class TurnManager : MonoBehaviour
 
     public enum State { None, Busy, WaitingForPlayerInput, WaitingForEnemyInput, Ending, Win }
 
-    public enum Choice { Attack, SpecialAttack, Eat, Nothing }
+    public enum Choice { Attack, SpecialAttack, Eat, Nothing, PassTurn }
 
     public static TurnManager instance;
     private bool checkingForEnemyAction = false;
     public bool doingEnemyAction = false;
+    public event Action PlayerActionable;
+    public event Action PlayerNonActionable;
     private void Awake()
     {
         instance = this;
@@ -37,12 +39,12 @@ public class TurnManager : MonoBehaviour
     private void Start()
     {
         ChangeState(State.None);
-        StartBattle();
     }
 
     public void StartBattle()
     {
         ChangeState(State.WaitingForPlayerInput);
+        PlayerActionable.Invoke();
     }
 
     public void UpdateTurnDisplay()
@@ -56,6 +58,14 @@ public class TurnManager : MonoBehaviour
         UpdateTurnDisplay();
     }
 
+    public void ChangePlayerActionable(bool toggle)
+    {
+        if (toggle)
+        PlayerActionable.Invoke();
+        else
+        PlayerNonActionable.Invoke();
+    }
+
     private void Update()
     {
         if(state!=State.None)
@@ -63,7 +73,7 @@ public class TurnManager : MonoBehaviour
             if (state == State.WaitingForPlayerInput)
             {
                 if (player.currentActionCount<=0)
-                {
+                {   
                     ChangeState(State.WaitingForEnemyInput);
                 }
                 else if (ChoiceChosen)
@@ -111,6 +121,11 @@ public class TurnManager : MonoBehaviour
 
                     return;
 
+                    case 4: //pass turn
+                    PassTurn();
+
+                    return;
+
                     default: //even more nothing????
                     return;
 
@@ -132,11 +147,13 @@ public class TurnManager : MonoBehaviour
             {
                 if(BattleManager.instance.CheckForKillRequirement()) 
                 {
+                        PlayerActionable.Invoke();
                         ChangeState(State.WaitingForPlayerInput);
                 }
                 else
                 {
                     ChangeState(State.None); //this should be when loot table should come up
+                    PlayerNonActionable.Invoke();
                     LootManager.instance.StartLooting();
                 }
             }
@@ -160,18 +177,26 @@ IEnumerator ContinuePlayerTurn()
     {
         if (player.currentActionCount>0)
         {
+            PlayerActionable.Invoke();
             ChangeState(State.WaitingForPlayerInput);
         }
         else
         {
+            PlayerNonActionable.Invoke();
             ChangeState(State.WaitingForEnemyInput);
         }
     }
     else
     {
+        PlayerNonActionable.Invoke();
         ChangeState(State.Ending);
     }
     yield break;
+}
+
+public void PassTurn()
+{
+    ChangeState(State.WaitingForEnemyInput);
 }
 
 IEnumerator DoEnemyTurns()
