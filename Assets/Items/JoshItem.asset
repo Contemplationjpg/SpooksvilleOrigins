@@ -26,7 +26,9 @@ MonoBehaviour:
   isBuffItem: 1
   buffsPower: 1
   powerBuff: 0
-  powerMult: 0.01
+  powerMult: 0.5
   buffsDefense: 0
   defenseBuff: 0
   defenseMult: 0
+  hasDefensiveProperty: 0
+  defensiveProperty: 0

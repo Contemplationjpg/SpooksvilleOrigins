@@ -19,6 +19,19 @@ MonoBehaviour:
   isDefaultItem: 0
   isStackable: 0
   maxStackSize: 99
+  isHealItem: 0
+  healAmount: 0
+  isSugarItem: 0
+  sugarAmount: 0
+  isBuffItem: 0
+  buffsPower: 0
+  powerBuff: 0
+  powerMult: 0
+  buffsDefense: 0
+  defenseBuff: 0
+  defenseMult: 0
+  hasDefensiveProperty: 0
+  defensiveProperty: 0
   damage: 5
   damageBonus: 13
   attackDurabilityCost: 0
@@ -29,8 +42,8 @@ MonoBehaviour:
   canCrit: 1
   critMult: 1.5
   damageType: 
-  maxDurability: 30
+  maxDurability: 1
   numberOfTargets: 1
-  sugarYield: 20
+  sugarYield: 0
   attackTime: 1
   specialAttackTime: 1

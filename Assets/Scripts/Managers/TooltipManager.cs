@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class TooltipManager : MonoBehaviour
 {
     public static TooltipManager instance;
+    [Header("Entity Tip")]
     public GameObject SmallEntityTipBox;
     public GameObject BigEntityTipBox;
     public TMP_Text entityName;
@@ -17,12 +18,23 @@ public class TooltipManager : MonoBehaviour
     public TMP_Text entityDefenseShort;
     public TMP_Text entityFlavor;
     public UnityEngine.UI.Image entitySprite;
-
     private Entity currentEntity;
-
     public GameObject dropDown;
-
     public bool expanded = false;
+
+    [Header("WeaponTip")]
+    public GameObject BLAnchor;
+    public GameObject weaponTipPanel;
+    public TMP_Text weaponName;
+    public TMP_Text weaponPower;
+    public TMP_Text weaponYield;
+    public TMP_Text weaponCost;
+    public TMP_Text weaponDurability;
+    public TMP_Text weaponDesc;
+    private WeaponInventoryContainer currentWeapon;
+    public bool showingWeaponTip = false;
+
+
 
     void Awake()
     {
@@ -135,6 +147,58 @@ public class TooltipManager : MonoBehaviour
         // {
         //     EntityTipBox.transform.position = Input.mousePosition;
         // }
+        if (showingWeaponTip)
+        {
+            BLAnchor.transform.position = Input.mousePosition;
+        }
+    }
+
+    public void WeaponStatTip(WeaponInventoryContainer weap)
+    {
+        currentWeapon = weap;
+        weaponName.text = weap.weapon.itemName;
+        weaponYield.text = weap.weapon.sugarYield.ToString();
+        weaponCost.text = weap.weapon.attackDurabilityCost.ToString();
+        weaponPower.text = weap.weapon.damage.ToString();
+        weaponDurability.text = weap.durability + "/" + weap.weapon.maxDurability;
+        weaponDesc.text = weap.weapon.description;
+    }
+
+    public bool SetWeaponStatTip(int slot)
+    {
+        if (slot < 0)
+        {
+            WeaponInventoryContainer defWeap = new WeaponInventoryContainer(BattleManager.instance.defaultWeapon, 1);
+            WeaponStatTip(defWeap);
+            return true;
+        }
+        else if (WeaponInventory.instance.weapons[slot] != null)
+        {
+            WeaponStatTip(WeaponInventory.instance.weapons[slot]);
+            return true;
+        }
+        return false;
+    }
+
+    public void ShowWeaponTip(int slot)
+    {
+        if (!showingWeaponTip)
+        {
+            if (SetWeaponStatTip(slot))
+            {
+                weaponTipPanel.SetActive(true);
+                showingWeaponTip = true;
+            }
+        }
+    }
+
+    public void HideWeaponTip()
+    {
+        if (showingWeaponTip)
+        {
+            weaponTipPanel.SetActive(false);
+            showingWeaponTip = false;
+        }
     }
 
 }
