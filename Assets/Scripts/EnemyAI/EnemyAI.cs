@@ -28,13 +28,36 @@ public class EnemyAI : MonoBehaviour
     public void EnemyDecision()
     {
         SimpleAnimation anim = GetComponent<SimpleAnimation>();
-        anim.DoLeftSlide();
-        EnemyAttack();
+        int percent = (enemy.currentHealth*100)/enemy.maxHealth;
+        Debug.Log("Enemy health is at " + percent + " percent");
+        if (percent < 50)
+        {
+            anim.DoLittleHop();
+            EnemyHeal();
+            EnemyBuff(0,20);
+        }
+        else
+        {
+            anim.DoLeftSlide();
+            EnemyAttack();
+        }
+        
     }
 
     public void EnemyAttack()
     {
         playerHealthBar.ReduceHealth(battleManager.CalculateDamage(weapon, enemy, player));
+    }
+
+    public void EnemyHeal()
+    {
+        battleManager.enemyHealthBars[battleManager.FindEnemyInSlot(enemy)].IncreaseHealth(20);
+    }
+
+    public void EnemyBuff(int pow = 0, int def = 0)
+    {
+        enemy.powerFlatMod+=pow;
+        enemy.defenseFlatMod+=def;
     }
 
 

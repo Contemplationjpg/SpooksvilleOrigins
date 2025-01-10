@@ -16,6 +16,10 @@ public class HealthBar : MonoBehaviour
     private Slider healthBar;
     private TMP_Text healthText;
     private SpriteRenderer itemSR;
+    [SerializeField]
+    private bool canOverheal = false;
+    private bool hasOverhealLimit = false;
+    private int overhealLimit = 0;
     
 
     public void Awake()
@@ -82,16 +86,55 @@ public class HealthBar : MonoBehaviour
     {
         if (increaseHealth<0)
         increaseHealth=0;
-        if(entity.currentHealth+increaseHealth<=entity.maxHealth)
+        int newHealth = entity.currentHealth+increaseHealth;
+        if (canOverheal)
         {
+            if (hasOverhealLimit)
+            {
+                int limit = entity.maxHealth;
+                limit += overhealLimit;
+                if (newHealth<=limit)
+                {
+                    entity.currentHealth = newHealth;
+                    UpdateHealthBar();
+                    return;
+                }
+                else
+                {
+                    entity.currentHealth = limit;
+                    UpdateHealthBar();
+                    return;
+                }
+            }
             entity.currentHealth+=increaseHealth;
             UpdateHealthBar();
+            return;
+        }
+        if(newHealth > entity.maxHealth)
+        {
+            if (entity.currentHealth > entity.maxHealth)
+            {
+                UpdateHealthBar();
+                return;
+            }
+            else
+            {
+                entity.currentHealth=entity.maxHealth;
+                UpdateHealthBar();
+                return;
+            }
         }
         else
         {
-            entity.currentHealth=entity.maxHealth;
+            entity.currentHealth=newHealth;
             UpdateHealthBar();
         }
+    }
+
+    public void ChangeEntity(Entity e)
+    {
+        entity = e;
+        UpdateHealthBar();
     }
 
     public int GetHealth()
@@ -101,7 +144,7 @@ public class HealthBar : MonoBehaviour
 
     private void UpdateText()
     {
-        string newHealthText = healthBar.value.ToString() + "/" + entity.maxHealth;
+        string newHealthText = entity.currentHealth.ToString() + "/" + entity.maxHealth;
         healthText.text = newHealthText;
     }
 
@@ -120,6 +163,9 @@ public class HealthBar : MonoBehaviour
         {
         healthBar.maxValue = entity.maxHealth;
         healthBar.value = entity.currentHealth;
+        canOverheal = entity.canOverheal;
+        hasOverhealLimit = entity.hasOverhealLimit;
+        overhealLimit = entity.overhealLimit;
         UpdateText();    
         }
         else

@@ -61,6 +61,7 @@ public class WeaponInventoryManager : MonoBehaviour
         TurnManager.instance.PlayerNonActionable += MakePlayerInactionable;
         UpdateDefaultWeaponUI();
         InitializeButtons();
+        UpdateWeaponUI();
     }
 
     public void ResetWeaponUI()
@@ -140,7 +141,7 @@ public class WeaponInventoryManager : MonoBehaviour
     }
     void EnableAllButtons()
     {
-        Debug.Log("Enabling Weapon Buttons");
+        // Debug.Log("Enabling Weapon Buttons");
         for(int i = 0; i < weaponSlots.Length;i++)
         {
             if (weaponInventory.weapons[i] != null)
@@ -153,7 +154,7 @@ public class WeaponInventoryManager : MonoBehaviour
 
     void DisableAllButtons()
     {
-        Debug.Log("Disabling Weapon Buttons");
+        // Debug.Log("Disabling Weapon Buttons");
         foreach(Button b in buttons)
         {
             b.interactable = false;

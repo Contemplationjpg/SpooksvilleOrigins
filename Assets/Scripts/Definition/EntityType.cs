@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,10 +12,13 @@ public class EntityType : ScriptableObject
     public bool isEnemy = true;
     public EnemyAI ai;
     public Weapon weapon = null;
-
-    //stats
+    public String flavor = "";
+    [Header("Stats")]
     public int maxHealth = 100;
     public int currentHealth = 100;
+    public bool canOverheal;
+    public bool hasOverhealLimit;
+    public int overhealLimit = 0;
     public int defense = 10;
     public int power = 10;
     public string weaknessTag = "";

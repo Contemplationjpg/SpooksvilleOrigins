@@ -19,16 +19,18 @@ public class TurnManager : MonoBehaviour
     public TMP_Text actionsDisplay;
     public TMP_Text turnDisplay;
     public Player player;
+    public Item selectedItem;
 
 
     public enum State { None, Busy, WaitingForPlayerInput, WaitingForEnemyInput, Ending, Win }
 
-    public enum Choice { Attack, SpecialAttack, Eat, Nothing, PassTurn }
+    public enum Choice { Attack, SpecialAttack, Eat, UseItem, Nothing, PassTurn }
 
     public static TurnManager instance;
     private bool checkingForEnemyAction = false;
     public bool doingEnemyAction = false;
     public event Action PlayerActionable;
+    public event Action OnUpdateHealthStats;
     public event Action PlayerNonActionable;
     private void Awake()
     {
@@ -43,6 +45,7 @@ public class TurnManager : MonoBehaviour
 
     public void StartBattle()
     {
+        TooltipManager.instance.EntityStatTip(player);
         ChangeState(State.WaitingForPlayerInput);
         PlayerActionable.Invoke();
     }
@@ -117,11 +120,21 @@ public class TurnManager : MonoBehaviour
                     
                     return;
 
-                    case 3: //Nothing (AKA the choice wasn't valid)
+                    case 3: //UseItem
+                    if (selectedItem.AttemptItemUse())
+                    {
+                        player.ChangeActionCount(-1);
+                        UpdateTurnDisplay();
+                    }
+                    StartCoroutine(ContinuePlayerTurn());
 
                     return;
 
-                    case 4: //pass turn
+                    case 4: //Nothing (AKA the choice wasn't valid)
+
+                    return;
+
+                    case 5: //pass turn
                     PassTurn();
 
                     return;
@@ -173,6 +186,7 @@ IEnumerator ContinuePlayerTurn()
 {
     SimpleAnimation animation = player.GetComponentInParent<SimpleAnimation>();
     yield return new WaitUntil(() => !animation.doingAnimation);
+    OnUpdateHealthStats.Invoke();
     if(BattleManager.instance.CheckForKillRequirement()) 
     {
         if (player.currentActionCount>0)
@@ -214,6 +228,7 @@ IEnumerator DoEnemyTurns()
             SimpleAnimation anima = currentEnemy.GetComponentInParent<SimpleAnimation>();
             // anima.DoLittleHop();
             currentEnemy.ai.EnemyDecision();
+            OnUpdateHealthStats.Invoke();
             yield return new WaitUntil(() => !anima.doingAnimation);
             
             Debug.Log("Enemy " + i + " turn over.");

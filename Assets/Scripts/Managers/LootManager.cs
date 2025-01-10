@@ -48,7 +48,7 @@ public class LootManager : MonoBehaviour
     {
         for (int i = 0; i < enc.loot.Length; i++) 
         { 
-            print("setting loot slot " + i + " to item: " + enc.loot[i].itemName);
+            // print("setting loot slot " + i + " to item: " + enc.loot[i].itemName);
             SetLootSlot(i, enc.loot[i], enc.lootCounts[i]);
         }
     }

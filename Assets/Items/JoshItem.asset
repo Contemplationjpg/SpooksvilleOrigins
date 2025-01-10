@@ -15,6 +15,18 @@ MonoBehaviour:
   itemName: JoshItem
   displayName: Josh
   icon: {fileID: 21300000, guid: 9592076466dcb164b9c49da3c25e732d, type: 3}
+  description: 
   isDefaultItem: 0
   isStackable: 1
   maxStackSize: 99
+  isHealItem: 0
+  healAmount: 0
+  isSugarItem: 0
+  sugarAmount: 0
+  isBuffItem: 1
+  buffsPower: 1
+  powerBuff: 0
+  powerMult: 0.01
+  buffsDefense: 0
+  defenseBuff: 0
+  defenseMult: 0

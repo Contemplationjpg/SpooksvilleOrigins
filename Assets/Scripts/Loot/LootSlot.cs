@@ -17,7 +17,7 @@ public class LootSlot : MonoBehaviour
     }
     public void SetItem(Item item, int amount)
     {
-        print("setting item to: " + item.itemName);
+        // print("setting item to: " + item.itemName);
         slotItem = item;
         itemAmount = amount;
         itemIcon.sprite = item.icon;

@@ -18,10 +18,14 @@ MonoBehaviour:
   isEnemy: 1
   ai: {fileID: 0}
   weapon: {fileID: 11400000, guid: cda743779ab8ae64baac18a6e3acf683, type: 2}
+  flavor: A fairly strong enemy!
   maxHealth: 100
   currentHealth: 100
+  canOverheal: 0
+  hasOverhealLimit: 0
+  overhealLimit: 0
   defense: 10
-  power: 1
+  power: 10
   weaknessTag: 
   luck: 0
   canCrit: 1

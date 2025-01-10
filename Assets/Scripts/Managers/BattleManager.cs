@@ -32,6 +32,7 @@ public class BattleManager : MonoBehaviour
     public Image defaultWeaponSprite;
     public event Action OnWeaponSelectedCallback;
     public event Action OnDefaultWeaponChanged;
+    public event Action OnEnemyKilled;
 
 
 
@@ -49,6 +50,7 @@ public class BattleManager : MonoBehaviour
         playerInitialized = false;
         player = playerObject.GetComponent<Player>();
         defaultWeapon = player.playerType.weapon;
+        player.BuildEntity();
         playerInitialized = true;
         weaponDatabase.RefreshDatabase();
         itemDatabase.RefreshDatabase();
@@ -63,7 +65,6 @@ public class BattleManager : MonoBehaviour
             enemies[i] = new EntitySlot();
             enemyHealthBars[i] = enemyBattlePositions[i].GetComponentInChildren<HealthBar>();
         }
-
     }
 
     void Start()
@@ -77,7 +78,7 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator LateStartForAddingWeapon() //debug
     { 
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
         WeaponInventory.instance.AddTestWeapon();
         TurnManager.instance.StartBattle();
     }
@@ -95,7 +96,7 @@ public class BattleManager : MonoBehaviour
 
     void InitializePlayerHealthBar()
     {
-        playerHealth.entity = player;
+        playerHealth.ChangeEntity(player);
         playerHealth.ShowHealthBar();
         playerHealth.UpdateHealthBar();
     }
@@ -192,7 +193,7 @@ public class BattleManager : MonoBehaviour
             {
                 if (enemies[i].entity.requiredKill)
                 {
-                    Debug.Log("Kill requirement exists at slot " + i);
+                    // Debug.Log("Kill requirement exists at slot " + i);
                     return true;
                 }
             }
@@ -259,7 +260,7 @@ public class BattleManager : MonoBehaviour
                 enemies[earliestSlot].entity = newEntity.GetComponent<Entity>();
                 enemies[earliestSlot].entityGO = newEntity;
                 enemies[earliestSlot].taken = true;
-                enemyHealthBars[earliestSlot].entity = newEntity.GetComponent<Entity>();
+                enemyHealthBars[earliestSlot].ChangeEntity(newEntity.GetComponent<Entity>());
                 enemyHealthBars[earliestSlot].ShowHealthBar();
                 enemyHealthBars[earliestSlot].UpdateHealthBar();
                 enemyHealthBars[earliestSlot].SetWeapon();
@@ -289,9 +290,10 @@ public class BattleManager : MonoBehaviour
                 enemies[slotOverride].entity = newEntity.GetComponent<Entity>();
                 enemies[slotOverride].entityGO = newEntity;
                 enemies[slotOverride].taken = true;
-                enemyHealthBars[slotOverride].entity = newEntity.GetComponent<Entity>();
+                enemyHealthBars[slotOverride].ChangeEntity(newEntity.GetComponent<Entity>());
                 enemyHealthBars[slotOverride].UpdateHealthBar();
                 enemyHealthBars[slotOverride].ShowHealthBar();
+                enemyHealthBars[slotOverride].SetWeapon();
 
                 Debug.Log("Created entity, " + entityType.entityName + ", at slot " + slotOverride);
                 return true;
@@ -360,7 +362,7 @@ public class BattleManager : MonoBehaviour
         if (TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput)
         {
             newSelectedWeaponSlot = newWeaponInventorySlot;
-            Debug.Log("Hovered weapon slot: " + newSelectedWeaponSlot);
+            // Debug.Log("Hovered weapon slot: " + newSelectedWeaponSlot);
             // Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[newSelectedWeaponSlot].weapon.itemName);
             PlayerAttackTargettingHelper.instance.ChangeCheckBool(true);
             OnWeaponSelectedCallback.Invoke();
@@ -383,7 +385,7 @@ public class BattleManager : MonoBehaviour
         selectedWeaponSlot = newSelectedWeaponSlot;
         if (selectedWeaponSlot < 0)
         {
-            Debug.Log("Selected new weapon: " + defaultWeapon.itemName);
+            // Debug.Log("Selected new weapon: " + defaultWeapon.itemName);
         }
         else
         Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[selectedWeaponSlot].weapon.itemName);
@@ -424,6 +426,8 @@ public class BattleManager : MonoBehaviour
 
                     if (enemyHealthBars[i].GetHealth() == 0)
                     {
+                        Debug.Log("Enemy killed at slot " + i);
+                        OnEnemyKilled.Invoke();
                         RemoveEnemy(i);
                     }
                             
@@ -441,11 +445,13 @@ public class BattleManager : MonoBehaviour
         // Debug.Log(attacker.power + " attacker power");
         // Debug.Log(defender.defense + " defender defense");
         float preroundedDamage;
+        float attackerPowerAfterBuffs = (attacker.power + attacker.powerFlatMod)*attacker.powerMultMod;
+        float defenderDamageAfterBuffs = (defender.defense + defender.defenseFlatMod)*defender.defenseMultMod;
         if (!special)
-        preroundedDamage = weapon.damage * attacker.power;
+        preroundedDamage = weapon.damage * attackerPowerAfterBuffs;
         else
-        preroundedDamage = weapon.specialDamage * attacker.power;
-        float defenseMulti = 25+defender.defense;
+        preroundedDamage = weapon.specialDamage * attackerPowerAfterBuffs;
+        float defenseMulti = 25+defenderDamageAfterBuffs;
         // Debug.Log(defenseMulti + " defenseMulti before being divided");
 
         defenseMulti = 25/defenseMulti;
@@ -473,6 +479,10 @@ public class BattleManager : MonoBehaviour
         }
         int processedDamage = (int)preroundedDamage+1;
         //return damage
+        if (processedDamage <= 0)
+        {
+            processedDamage = 1;
+        }
         return processedDamage;
     }
 
@@ -525,8 +535,11 @@ public class BattleManager : MonoBehaviour
 
     public void PassTurn()
     {
-        TurnManager.instance.choice = TurnManager.Choice.PassTurn;
-        TurnManager.instance.ChoiceChosen = true;
+        if (TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput)
+        {
+            TurnManager.instance.choice = TurnManager.Choice.PassTurn;
+            TurnManager.instance.ChoiceChosen = true;
+        }
     }
 
 

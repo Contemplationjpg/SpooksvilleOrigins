@@ -15,6 +15,18 @@ MonoBehaviour:
   itemName: AmeItem
   displayName: Ame
   icon: {fileID: 21300000, guid: cc49614278f5b46429d65955335193a1, type: 3}
+  description: 
   isDefaultItem: 0
   isStackable: 1
-  maxStackSize: 5
+  maxStackSize: 99
+  isHealItem: 1
+  healAmount: 200
+  isSugarItem: 0
+  sugarAmount: 0
+  isBuffItem: 1
+  buffsPower: 1
+  powerBuff: 5
+  powerMult: 0
+  buffsDefense: 0
+  defenseBuff: 0
+  defenseMult: 0

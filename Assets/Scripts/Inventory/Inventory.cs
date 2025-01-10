@@ -116,23 +116,36 @@ public class Inventory : MonoBehaviour
         return amountAdded;
    }
 
-    public void RemoveItem(Item item, int amount)
+    public bool RemoveItem(Item item, int amount)
     {
-
-        for (int i = currentInventorySpace-1; i > 0; i--)
+        try
         {
-            if (items[i].item == item)
+            Debug.Log("attempting to remove item: " + item.itemName);
+            for (int i = currentInventorySpace-1; i >= 0; i--)
             {
-                items[i].amount += amount;
-                if (items[i].amount == 0)
+                if (items[i].item == item)
                 {
-                    items.RemoveAt(i);
-                    currentInventorySpace -= 1;
+                    Debug.Log("found item: " + item.itemName);
+                    items[i].amount -= amount;
+                    if (items[i].amount <= 0)
+                    {
+                        items.RemoveAt(i);
+                        currentInventorySpace -= 1;
+                    }
+                    OnItemChangedCallBack.Invoke();
+                    Debug.Log("removed item: " + item.itemName);
+                    return true;
                 }
-                OnItemChangedCallBack.Invoke();
-                return;
             }
         }
+        catch (Exception ex)
+        {
+            Debug.LogWarning("Inventory empty, could not remove item");
+            Debug.LogWarning(ex);
+            return false;
+        }
+        Debug.LogWarning("Could not find item: " + item.itemName);
+        return false;
     }
 
     public void RemoveItem(int index, int amount)
