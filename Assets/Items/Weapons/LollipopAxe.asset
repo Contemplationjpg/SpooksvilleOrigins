@@ -15,10 +15,23 @@ MonoBehaviour:
   itemName: LollipopAxe
   displayName: Lollipop Axe
   icon: {fileID: 21300000, guid: ea7312a6bb617c540aaff233adf7630b, type: 3}
-  description: 
+  description: 'A lollipop in the shape of an axe. '
   isDefaultItem: 0
   isStackable: 0
   maxStackSize: 99
+  isHealItem: 0
+  healAmount: 0
+  isSugarItem: 0
+  sugarAmount: 0
+  isBuffItem: 0
+  buffsPower: 0
+  powerBuff: 0
+  powerMult: 0
+  buffsDefense: 0
+  defenseBuff: 0
+  defenseMult: 0
+  hasDefensiveProperty: 0
+  defensiveProperty: 0
   damage: 10
   damageBonus: 13
   attackDurabilityCost: 1

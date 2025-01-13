@@ -21,9 +21,9 @@ MonoBehaviour:
   flavor: A timid boy in a ghost costume.
   maxHealth: 200
   currentHealth: 200
-  canOverheal: 1
+  canOverheal: 0
   hasOverhealLimit: 1
-  overhealLimit: 101
+  overhealLimit: 100
   defense: 3
   power: 3
   weaknessTag: 

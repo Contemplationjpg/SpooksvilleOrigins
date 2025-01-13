@@ -15,10 +15,23 @@ MonoBehaviour:
   itemName: TESTWEAPON
   displayName: TEST WEAPON
   icon: {fileID: 21300000, guid: 22d19dba106cad7429b309e2b3b09019, type: 3}
-  description: 
+  description: lol hiii
   isDefaultItem: 0
   isStackable: 0
   maxStackSize: 99
+  isHealItem: 0
+  healAmount: 0
+  isSugarItem: 0
+  sugarAmount: 0
+  isBuffItem: 0
+  buffsPower: 0
+  powerBuff: 0
+  powerMult: 0
+  buffsDefense: 0
+  defenseBuff: 0
+  defenseMult: 0
+  hasDefensiveProperty: 0
+  defensiveProperty: 0
   damage: 40
   damageBonus: 13
   attackDurabilityCost: 5
@@ -31,6 +44,6 @@ MonoBehaviour:
   damageType: fire
   maxDurability: 40
   numberOfTargets: 1
-  sugarYield: 20
+  sugarYield: 10
   attackTime: 1
   specialAttackTime: 1

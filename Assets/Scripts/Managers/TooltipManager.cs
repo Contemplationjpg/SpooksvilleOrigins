@@ -21,9 +21,9 @@ public class TooltipManager : MonoBehaviour
     private Entity currentEntity;
     public GameObject dropDown;
     public bool expanded = false;
-
-    [Header("WeaponTip")]
     public GameObject BLAnchor;
+    [Header("WeaponTip")]
+    
     public GameObject weaponTipPanel;
     public TMP_Text weaponName;
     public TMP_Text weaponPower;
@@ -33,6 +33,20 @@ public class TooltipManager : MonoBehaviour
     public TMP_Text weaponDesc;
     private WeaponInventoryContainer currentWeapon;
     public bool showingWeaponTip = false;
+
+    [Header("ItemTip")]
+    public GameObject itemTipPanel;
+    public TMP_Text itemName;
+    public TMP_Text itemCount;
+    public TMP_Text itemFlatPower;
+    public TMP_Text itemMultPower;
+    public TMP_Text itemFlatDef;
+    public TMP_Text itemMultDef;
+    public TMP_Text itemHeal;
+    public TMP_Text itemDesc;
+    private InventoryContainer currentItem;
+    public bool showingItemTip = false;
+
 
 
 
@@ -67,29 +81,6 @@ public class TooltipManager : MonoBehaviour
     {
         EntityStatTip(currentEntity);
     }
-
-    // public void UpdateEntityTip()
-    // {
-
-    // }
-
-    // public void ShowEntityTip()
-    // {
-    //     if (!showingTip)
-    //     {
-    //         SmallEntityTipBox.SetActive(true);
-    //         showingTip = true;
-    //     }
-    // }
-
-    // public void HideEntityTip()
-    // {
-    //     if (showingTip)
-    //     {
-    //         EntityTipBox.SetActive(false);
-    //         showingTip = false;
-    //     }
-    // }
 
     public void ToggleEntityTip()
     {
@@ -143,11 +134,7 @@ public class TooltipManager : MonoBehaviour
 
     void Update()
     {
-        // if (showingTip) tooltip mouse follow
-        // {
-        //     EntityTipBox.transform.position = Input.mousePosition;
-        // }
-        if (showingWeaponTip)
+        if (showingWeaponTip||showingItemTip)
         {
             BLAnchor.transform.position = Input.mousePosition;
         }
@@ -198,6 +185,53 @@ public class TooltipManager : MonoBehaviour
         {
             weaponTipPanel.SetActive(false);
             showingWeaponTip = false;
+        }
+    }
+
+    //
+    public void ItemStatTip(InventoryContainer item)
+    {
+        currentItem = item;
+        itemName.text = item.item.itemName;
+        itemCount.text = item.amount + "/" + item.item.maxStackSize;
+        itemFlatPower.text = "+" + item.item.powerBuff.ToString();
+        itemMultPower.text = "+x" + item.item.powerMult.ToString();
+        itemFlatDef.text = "+" + item.item.defenseBuff.ToString();
+        itemMultDef.text = "+x" + item.item.defenseMult.ToString();
+        itemHeal.text = item.item.healAmount.ToString();
+        itemDesc.text = item.item.description;
+    }
+
+    public bool SetItemStatTip(InventoryContainer slot)
+    {
+        if (slot != null)
+        {
+            ItemStatTip(slot);
+            return true;
+        }
+        return false;
+    }
+    
+
+
+    public void ShowItemTip(InventoryContainer slot)
+    {
+        if (!showingWeaponTip)
+        {
+            if (SetItemStatTip(slot))
+            {
+                itemTipPanel.SetActive(true);
+                showingItemTip = true;
+            }
+        }
+    }
+
+    public void HideItemTip()
+    {
+        if (showingItemTip)
+        {
+            itemTipPanel.SetActive(false);
+            showingItemTip = false;
         }
     }
 

@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -41,8 +42,21 @@ public void CopyOverBattleInventory()
         var newSlot = Instantiate(ItemSlot,ItemPanel.transform);
         TMP_Text[] textBoxes = newSlot.GetComponentsInChildren<TMP_Text>();
         Button button = newSlot.GetComponent<Button>();
+        EventTrigger eT = newSlot.GetComponent<EventTrigger>();
+        EventTrigger.Entry eTentry = new EventTrigger.Entry()
+        {
+            eventID = EventTriggerType.PointerEnter
+        };
+        EventTrigger.Entry eTexit = new EventTrigger.Entry()
+        {
+            eventID = EventTriggerType.PointerExit
+        };
         
         button.onClick.AddListener(i.item.Use);
+        eTentry.callback.AddListener((hoverFunction) => {TooltipManager.instance.ShowItemTip(i); });
+        eT.triggers.Add(eTentry);
+        eTexit.callback.AddListener((hoverExitFunction) => {TooltipManager.instance.HideItemTip(); });
+        eT.triggers.Add(eTexit);
         textBoxes[0].text = itemName;
         textBoxes[1].text = itemCount.ToString();
     }

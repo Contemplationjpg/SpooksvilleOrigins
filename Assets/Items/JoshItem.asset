@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: JoshItem
   displayName: Josh
   icon: {fileID: 21300000, guid: 9592076466dcb164b9c49da3c25e732d, type: 3}
-  description: 
+  description: Can you blow my whistle, baby, whistle, baby? Let me know.
   isDefaultItem: 0
   isStackable: 1
   maxStackSize: 99

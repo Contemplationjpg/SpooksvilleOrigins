@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Fists
   displayName: Fists
   icon: {fileID: 21300000, guid: 1b8a40edd953dde4ba11053e1ee8f5e3, type: 3}
-  description: 
+  description: Your bare hands.
   isDefaultItem: 0
   isStackable: 0
   maxStackSize: 99
