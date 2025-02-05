@@ -77,13 +77,15 @@ public class Item : ScriptableObject
         if (isHealItem)
         {
             Debug.Log("Healing player for " + healAmount);
-            BattleManager.instance.playerHealth.IncreaseHealth(healAmount);
+            int healedHealth = BattleManager.instance.playerHealth.IncreaseHealth(healAmount);
+            BattleManager.instance.SpawnEffectText(healedHealth.ToString(),-1,"green");
             itemUsed = true;
         }
         if (isSugarItem)
         {
             Debug.Log("Increasing player sugar for " + sugarAmount);
-            BattleManager.instance.playerSugar.IncreaseSugar(sugarAmount);
+            int gainedSugar = BattleManager.instance.playerSugar.IncreaseSugar(sugarAmount);
+            BattleManager.instance.SpawnEffectText(gainedSugar.ToString(),-1,"white");
             itemUsed = true;
         }
         if (isBuffItem)
@@ -91,15 +93,32 @@ public class Item : ScriptableObject
             if (buffsPower)
             {
                 Debug.Log("Buffing power by flat " + powerBuff + " and mult " + powerMult);
-                BattleManager.instance.playerObject.GetComponent<Player>().powerFlatMod += powerBuff;
-                BattleManager.instance.playerObject.GetComponent<Player>().powerMultMod += powerMult;
+                if (powerBuff!=0)
+                {
+                    BattleManager.instance.playerObject.GetComponent<Player>().powerFlatMod += powerBuff;
+                    BattleManager.instance.SpawnEffectText("+"+powerBuff.ToString(),-1,"red");
+                }
+                if (powerMult!=0)
+                {
+                    BattleManager.instance.playerObject.GetComponent<Player>().powerMultMod += powerMult;
+                    BattleManager.instance.SpawnEffectText("+x"+powerMult.ToString(),-1,"red");
+                }
+                
                 itemUsed = true;
             }
             if (buffsDefense)
             {
                 Debug.Log("Buffing defense by flat " + defenseBuff + " and mult " + defenseMult);
-                BattleManager.instance.playerObject.GetComponent<Player>().defenseFlatMod += defenseBuff;
-                BattleManager.instance.playerObject.GetComponent<Player>().defenseMultMod += defenseMult;
+                if (defenseBuff!=0)
+                {
+                    BattleManager.instance.playerObject.GetComponent<Player>().defenseFlatMod += defenseBuff;
+                    BattleManager.instance.SpawnEffectText("+"+defenseBuff.ToString(),-1,"blue");
+                }
+                if (defenseMult!=0)
+                {
+                    BattleManager.instance.playerObject.GetComponent<Player>().defenseMultMod += defenseMult;
+                    BattleManager.instance.SpawnEffectText("+x"+defenseMult.ToString(),-1,"blue");
+                }
                 itemUsed = true;
             }
         }

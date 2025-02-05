@@ -33,3 +33,8 @@ MonoBehaviour:
   currentSugar: 30
   maxSugar: 100
   baseActionCount: 4
+  ghost: 0
+  ghostChance: 0.75
+  vamp: 1
+  vampAmount: 0.25
+  wolf: 0

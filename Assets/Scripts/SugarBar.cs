@@ -59,33 +59,43 @@ public class SugarBar : MonoBehaviour
 
     }
 
-    public void ReduceSugar(int reduceSugar)
+    public int ReduceSugar(int reduceSugar)
     {
+        int lostSugar = 0;
         if (sugarBar.value - reduceSugar < 0)
         {
+            lostSugar = entity.currentSugar;
             entity.currentSugar = 0;
             UpdateSugarBar();
+            return lostSugar;
         }
         else
         {
+            lostSugar = reduceSugar;
             entity.currentSugar-=reduceSugar;
             UpdateSugarBar();
+            return lostSugar;
         }
     }
 
-    public void IncreaseSugar(int increaseSugar)
+    public int IncreaseSugar(int increaseSugar)
     {
+        int gainedSugar = 0;
         if (increaseSugar<0)
         increaseSugar=0;
         if(entity.currentSugar+increaseSugar<=entity.maxSugar)
         {
+            gainedSugar = increaseSugar;
             entity.currentSugar+=increaseSugar;
             UpdateSugarBar();
+            return gainedSugar;
         }
         else
         {
+            gainedSugar = entity.maxSugar - entity.currentSugar;
             entity.currentSugar=entity.maxSugar;
             UpdateSugarBar();
+            return gainedSugar;
         }
     }
 

@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
+using TMPro;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -11,13 +14,15 @@ public class BattleManager : MonoBehaviour
     public GameObject playerObject;
     public HealthBar playerHealth;
     public SugarBar playerSugar;
+    public GameObject effectTextPrefab;
     public EntitySlot[] enemies;
     public static bool playerInitialized = false;
     public ItemSystem itemDatabase;
     public HealthBar[] enemyHealthBars;
     public WeaponSystem weaponDatabase;
     public EntitySystem entityDatabase;
-    public EncounterSystem encounterSystem;
+    public EncounterSystem encounterDatabase;
+    public PerkSystem perkDatabase;
 
 
     public EncounterType currentEncounter;
@@ -36,7 +41,7 @@ public class BattleManager : MonoBehaviour
 
 
 
-    private Player player;
+    public Player player;
     public static BattleManager instance;
 
     public static int selectedWeaponSlot = -1;
@@ -51,11 +56,13 @@ public class BattleManager : MonoBehaviour
         player = playerObject.GetComponent<Player>();
         defaultWeapon = player.playerType.weapon;
         player.BuildEntity();
+        player.BuildPlayerEntity();
         playerInitialized = true;
         weaponDatabase.RefreshDatabase();
         itemDatabase.RefreshDatabase();
         entityDatabase.RefreshDatabase();
-        encounterSystem.RefreshDatabase();
+        encounterDatabase.RefreshDatabase();
+        perkDatabase.RefreshDatabase();
 
         enemies = new EntitySlot[enemyBattlePositions.Length];
         enemyHealthBars = new HealthBar[enemyBattlePositions.Length];
@@ -399,29 +406,34 @@ public class BattleManager : MonoBehaviour
             {
                 if(enemyHealthBars[i].entity == e)
                 {
+                    int dealtDamage = 0;
                     if (selectedWeaponSlot<0)
                     {
-                        int calcDamage;
-                        calcDamage = CalculateDamage(defaultWeapon, player, e, special);
+                        int calcDamage = CalculateDamage(defaultWeapon, player, e, special);
                         Debug.Log("Entity, " + e.entityType.entityName + ", is being dealt " + calcDamage + " damage");
-                        enemyHealthBars[i].ReduceHealth(calcDamage);
+                        dealtDamage = enemyHealthBars[i].ReduceHealth(calcDamage);
                     }
                     else
                     {
                         if(WeaponInventory.instance.GetDurability(selectedWeaponSlot)>0)
                         {
-                            int calcDamage;
-                            calcDamage = CalculateDamage(WeaponInventory.instance.weapons[selectedWeaponSlot].weapon, player, e, special);
+                            int calcDamage = CalculateDamage(WeaponInventory.instance.weapons[selectedWeaponSlot].weapon, player, e, special);
                             Debug.Log("Entity, " + e.entityType.entityName + ", is being dealt " + calcDamage + " damage");
-
-                            // if (special) //DEBUG TESTING SPECIAL ATTACKS
-                            // {
-                            //     calcDamage+=15;
-                            // }
-                            enemyHealthBars[i].ReduceHealth(calcDamage);
+                            dealtDamage = enemyHealthBars[i].ReduceHealth(calcDamage);
                             WeaponInventory.instance.ReduceDurability(selectedWeaponSlot, WeaponInventory.instance.weapons[selectedWeaponSlot].weapon.attackDurabilityCost);
                         }
                     }
+                    SpawnEffectText(dealtDamage.ToString(),i,"white");
+
+                    if (player.vamp)
+                    {
+                        playerHealth.IncreaseHealth((int)Math.Round(dealtDamage*player.vampAmount));
+                    }
+                    if (player.sugarSteal)
+                    {
+                        playerSugar.IncreaseSugar((int)Math.Round(dealtDamage*player.sugarStealAmount));
+                    }
+                    
                     
 
                     if (enemyHealthBars[i].GetHealth() == 0)
@@ -539,6 +551,49 @@ public class BattleManager : MonoBehaviour
         {
             TurnManager.instance.choice = TurnManager.Choice.PassTurn;
             TurnManager.instance.ChoiceChosen = true;
+        }
+    }
+
+    
+    public void SpawnEffectText(String text,int slot = -1, String color = "white")
+    {
+        GameObject effText = Instantiate(effectTextPrefab);
+        effText.GetComponent<EffectText>().SetString(text);
+        // UnityEngine.Vector3 locScale = new UnityEngine.Vector3(0.6f, 0.6f, 0.6f);
+        // effText.GetComponent<Transform>().localScale = locScale;
+        if (color.Equals("white"))
+        {
+            effText.GetComponent<TMP_Text>().color = Color.white;
+        }
+        else if (color.Equals("red"))
+        {
+            effText.GetComponent<TMP_Text>().color = Color.red;
+        }
+        else if (color.Equals("blue"))
+        {   
+            effText.GetComponent<TMP_Text>().color = Color.blue;
+        }
+        else if (color.Equals("green"))
+        {   
+            effText.GetComponent<TMP_Text>().color = Color.green;
+        }
+        else if (color.Equals("grey"))
+        {   
+            effText.GetComponent<TMP_Text>().color = Color.grey;
+        }
+
+        var randX = UnityEngine.Random.Range(-0.1f,0.1f);
+        var randY = UnityEngine.Random.Range(-0.1f,0.1f);
+
+        if (slot<0)
+        {
+            UnityEngine.Vector2 effTextPos = new UnityEngine.Vector2(playerObject.transform.position.x+randX,playerObject.transform.position.y+0.2f+randY);
+            effText.GetComponent<Transform>().position = effTextPos;
+        }
+        else
+        {
+            UnityEngine.Vector2 effTextPos = new UnityEngine.Vector2(enemyBattlePositions[slot].transform.position.x+randX,enemyBattlePositions[slot].transform.position.y+0.3f+randY);
+            effText.GetComponent<Transform>().position = effTextPos;
         }
     }
 

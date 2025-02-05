@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -68,22 +69,28 @@ public class HealthBar : MonoBehaviour
 
     }
 
-    public void ReduceHealth(int reduceHealth)
+    public int ReduceHealth(int reduceHealth)
     {
+        int dealtDamage = 0;
         if (healthBar.value - reduceHealth < 0)
         {
+            dealtDamage = (int)Math.Round(healthBar.value);
             entity.currentHealth = 0;
             UpdateHealthBar();
+            return dealtDamage;
         }
         else
         {
+            dealtDamage = reduceHealth;
             entity.currentHealth-=reduceHealth;
             UpdateHealthBar();
+            return dealtDamage;
         }
     }
 
-    public void IncreaseHealth(int increaseHealth)
+    public int IncreaseHealth(int increaseHealth)
     {
+        int healedHealth = 0;
         if (increaseHealth<0)
         increaseHealth=0;
         int newHealth = entity.currentHealth+increaseHealth;
@@ -95,39 +102,45 @@ public class HealthBar : MonoBehaviour
                 limit += overhealLimit;
                 if (newHealth<=limit)
                 {
+                    healedHealth = newHealth - entity.currentHealth;
                     entity.currentHealth = newHealth;
                     UpdateHealthBar();
-                    return;
+                    return healedHealth;
                 }
                 else
                 {
+                    healedHealth = limit - entity.currentHealth;
                     entity.currentHealth = limit;
                     UpdateHealthBar();
-                    return;
+                    return healedHealth;
                 }
             }
+            healedHealth = increaseHealth;
             entity.currentHealth+=increaseHealth;
             UpdateHealthBar();
-            return;
+            return healedHealth;
         }
         if(newHealth > entity.maxHealth)
         {
             if (entity.currentHealth > entity.maxHealth)
             {
                 UpdateHealthBar();
-                return;
+                return 0;
             }
             else
             {
+                healedHealth = entity.maxHealth - entity.currentHealth;
                 entity.currentHealth=entity.maxHealth;
                 UpdateHealthBar();
-                return;
+                return healedHealth;
             }
         }
         else
         {
+            healedHealth = newHealth - entity.currentHealth;
             entity.currentHealth=newHealth;
             UpdateHealthBar();
+            return healedHealth;
         }
     }
 

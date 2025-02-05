@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e219a69b206e8194d901be14a7933c39, type: 3}
-  m_Name: EncounterDatabase
+  m_Script: {fileID: 11500000, guid: bc67104e47699c74a91fabda66f2aee1, type: 3}
+  m_Name: PerkDatabase
   m_EditorClassIdentifier: 
-  encounterDatabase:
-  - {fileID: 11400000, guid: bbfcf0439b0728f46b9453f00775c35b, type: 2}
+  perkDatabase:
+  - {fileID: 11400000, guid: 188f3b69a0860f64490b82f22e157f1d, type: 2}
+  - {fileID: 11400000, guid: 102f1d645934e874cb0895f33b8a2fe0, type: 2}

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEditor.SearchService;
 using UnityEngine;
@@ -21,6 +22,19 @@ public class Player : Entity
     public int currentSugar = 0;
     public int maxActionCount = 3;
     public int currentActionCount = 3;
+
+    [Header("Character Passives")]
+    public bool ghost = false;
+    public float ghostChance = 0.75f;
+    public bool vamp = false;
+    public float vampAmount = 0.25f;
+    public bool wolf = false;
+    [Header("Perks")]
+    public bool sugarSteal = false;
+    public float sugarStealAmount = 0.25f;
+    public bool passBlock = false;
+    public float passBlockReduction = 0.75f;
+
 
 
     
@@ -40,6 +54,15 @@ public class Player : Entity
         currentActionCount = maxActionCount;
         // Debug.Log("player action count set to " + actionCount);
         BuildEntity();
+    }
+
+    public void BuildPlayerEntity()
+    {
+        ghost = playerType.ghost;
+        ghostChance = playerType.ghostChance;
+        vamp = playerType.vamp;
+        vampAmount = playerType.vampAmount;
+        wolf = playerType.wolf;
     }
 
     public bool ChangeActionCount(int num)

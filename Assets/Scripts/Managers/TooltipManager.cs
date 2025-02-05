@@ -125,7 +125,7 @@ public class TooltipManager : MonoBehaviour
 
     private void DontShowDeadEnemy()
     {
-        Debug.LogWarning("picked up on OnEnemyKilled");
+        // Debug.Log("picked up on OnEnemyKilled");
         if (BattleManager.instance.FindEnemyInSlot(currentEntity) > BattleManager.instance.enemyBattlePositions.Length)
         {
             EntityStatTip(BattleManager.instance.playerObject.GetComponent<Entity>());

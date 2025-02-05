@@ -29,6 +29,8 @@ public class TurnManager : MonoBehaviour
     public static TurnManager instance;
     private bool checkingForEnemyAction = false;
     public bool doingEnemyAction = false;
+    public bool playerDefending = false;
+    public float playerDefendingMod = 1f;
     public event Action PlayerActionable;
     public event Action OnUpdateHealthStats;
     public event Action PlayerNonActionable;
@@ -67,6 +69,18 @@ public class TurnManager : MonoBehaviour
         PlayerActionable.Invoke();
         else
         PlayerNonActionable.Invoke();
+    }
+
+    public void ActivatePlayerDefending(float defMod)
+    {
+        Debug.Log("activating player defense");
+        playerDefendingMod = defMod;
+        for (int i = 0; i < player.currentActionCount; i++)
+        {
+            playerDefendingMod*=defMod;
+        }
+        BattleManager.instance.SpawnEffectText("Blocking x"+player.currentActionCount+"!",-1,"grey");
+        playerDefending = true;
     }
 
     private void Update()
@@ -210,6 +224,10 @@ IEnumerator ContinuePlayerTurn()
 
 public void PassTurn()
 {
+    if (player.passBlock)
+    {
+        ActivatePlayerDefending(player.passBlockReduction);
+    }
     ChangeState(State.WaitingForEnemyInput);
 }
 
@@ -241,6 +259,7 @@ IEnumerator DoEnemyTurns()
     }
     checkingForEnemyAction = false;
     player.ResetActionCount();
+    playerDefending = false;
     ChangeState(State.Ending);
 
 }
@@ -248,195 +267,3 @@ IEnumerator DoEnemyTurns()
 
 
 }
-
-
-
-
-
-// public enum TurnHolder {PreTurn, Player, Enemy, EndTurn, PostTurn}
-// public enum TurnAction {None, Attack, Special, Consume, Item, Unique}
-// public class TurnManager : MonoBehaviour
-// {
-//     [SerializeField]
-//     TMP_Text turnTrackerText;
-//     public static TurnHolder turnHolder;
-//     public static TurnAction playerTurnAction;
-//     public event Action TurnUpdate;
-//     public Weapon weapon;
-//     // public event Action PlayerActionChosen;
-
-//     //TurnHolder 0 = PreTurn, TurnHolder 1 = player, TurnHolder 2+ = enemies
-
-//     public bool waitingForPlayerInput = false;
-//     bool canActiveAttack = false;
-//     bool activeAttackLockout = true;
-//     bool activeAttackSuccess = false;
-//     bool doingQTE = false;
-    
-
-
-//     void Start()
-//     {
-//         TurnUpdate += UpdateTurnDisplay;
-//     }
-
-//     public void changeWeapon(Weapon newWeapon)
-//     {
-//         weapon = newWeapon;
-//     }
-
-//     public void UpdateTurnDisplay()
-//     {
-//         turnTrackerText.text = "Turn: " + turnHolder;
-//     }
-
-//     public void NextTurn(int skipCount = 1)
-//     {
-//         turnHolder += skipCount;
-//         TurnUpdate.Invoke();
-//     }
-
-//     public void StartBattle()
-//     {
-//         turnHolder = TurnHolder.PreTurn;
-//         StartTurn();
-//     }
-
-//     void StartTurn()
-//     {
-//         switch((int)turnHolder)
-//         {
-//             case 0:
-//             NextTurn();
-//             StartTurn();
-//             break;
-
-//             case 1:
-//             waitingForPlayerInput = true;
-//             StartCoroutine(WaitForPlayerAction());
-//             break;
-
-//             case 2:
-//             break;
-
-//             default:
-//             break;
-//         }
-
-//     }
-
-//     IEnumerator WaitForPlayerAction()
-//     {
-//         yield return new WaitUntil(()=> waitingForPlayerInput == false);
-//         switch((int)playerTurnAction)
-//         {
-//             case 0:
-//             break;
-
-//             case 1:
-//             StartCoroutine(PlayerAttackQTE(weapon));
-//             yield return new WaitUntil(()=> doingQTE == false);
-            
-//             // Target.DamageEnemyHealth(PlayerAttack(weapon)); //supposed to deal damage to targetted entity
-//             break;
-
-//             case 2:
-//             break;
-
-//             case 3:
-//             break;
-
-//             case 4:
-//             break;
-
-//             default:
-//             break;
-//         }
-
-//     }
-
-//     public int PlayerAttack(Weapon weapon, bool isSpecialAttack = false)
-//     {
-//         int damage = 1;
-
-//         if (!isSpecialAttack)
-//         {
-//             if (activeAttackSuccess)
-//             {
-//                 damage = weapon.damageBonus;
-//             }
-//             else
-//             damage = weapon.damage;
-//         }
-//         if (!isSpecialAttack)
-//         {
-//             damage = weapon.specialDamage;
-//         }
-
-
-
-
-//         return damage;
-//     }
-
-//     IEnumerator PlayerAttackQTE(Weapon weapon, bool isSpecialAttack = false)
-//     {
-//         canActiveAttack = false;
-//         if (!isSpecialAttack)
-//         {
-//             activeAttackLockout = false;
-//             yield return new WaitForSeconds(weapon.attackTime);
-//             activeAttackSuccess = false;
-//             canActiveAttack = true;
-//             doingQTE = true;
-//             StartCoroutine(SweetspotTime(.5f));
-//             StartCoroutine(SweetspotMisstime(.5f));
-//             yield return new WaitUntil(()=> doingQTE = false);
-//         }
-//         else if (isSpecialAttack)
-//         {
-//             yield return new WaitForSeconds(weapon.specialAttackTime);
-//         }
-        
-//     }
-
-//     IEnumerator SweetspotTime(float waitTime)
-//     {
-//         yield return new WaitForSeconds(waitTime);
-//         float timer = 0.0f;
-//         while (!activeAttackLockout && canActiveAttack)
-//         {
-//             if (Input.GetKeyDown(KeyCode.F))
-//             {
-//                 activeAttackSuccess = true;
-//                 activeAttackLockout = true;
-//             }
-//             else if (timer >= .3f)
-//             {
-//                 activeAttackLockout = true;
-//             }
-//             timer += Time.deltaTime;
-//         }
-//         doingQTE = false;
-//     }
-
-//     IEnumerator SweetspotMisstime (float waitTime)
-//     {
-//         float timer = 0.0f;
-//         yield return new WaitForSeconds(waitTime-.2f);
-//         bool canMisstime = true;
-//         while (canMisstime)
-//         {
-//             if (Input.GetKeyDown(KeyCode.F))
-//             {
-//                 activeAttackLockout = true;
-//             }
-//             else if (timer >= .2f)
-//             {
-//                 canMisstime = false;
-//             }
-//             timer += Time.deltaTime;
-//         }
-//     }
-
-// }

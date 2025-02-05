@@ -34,7 +34,7 @@ MonoBehaviour:
   defensiveProperty: 0
   damage: 40
   damageBonus: 13
-  attackDurabilityCost: 5
+  attackDurabilityCost: 2
   specialDamage: 70
   specialDamageBonus: 25
   specialSugarCost: 10
