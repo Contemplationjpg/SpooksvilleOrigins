@@ -24,6 +24,8 @@ Working on turn-based battle system...
     - player has multiple actions per turn 
     - after picking a weapon, player can toggle for normal or special attack
     - player has option to eat weapon
+    - perk system added
+    - damage numbers are able to appear near entities
 
 Art Progress:
     - resized game to be 320 x 180
