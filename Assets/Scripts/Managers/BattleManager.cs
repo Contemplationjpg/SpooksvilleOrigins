@@ -81,6 +81,7 @@ public class BattleManager : MonoBehaviour
         SpawnEncounter();
         // SetEncounterLoot();
         StartCoroutine(LateStartForAddingWeapon());//debug
+        SeedManager.instance.GenerateRandomSeed();
     }
 
     IEnumerator LateStartForAddingWeapon() //debug
