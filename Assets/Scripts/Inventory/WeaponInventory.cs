@@ -26,7 +26,7 @@ public class WeaponInventory : MonoBehaviour
 
     void Start()
     {
-        defaultWeapon = BattleManager.instance.defaultWeapon;
+        defaultWeapon = BattleOptionsManager.instance.defaultWeapon;
     }
 
     public bool AddWeapon(Weapon weapon, int durability)

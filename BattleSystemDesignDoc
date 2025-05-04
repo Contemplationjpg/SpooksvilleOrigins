@@ -1,0 +1,23 @@
+This document will detail the processes of the battle system of Spooksville Origin
+
+
+
+BattleManager: manages the details of the battle
+    - deals with:
+        - player/enemy health
+        - battle positions
+        - creating/removing entities
+        - deciding when to save/load player save data from file
+    - processes:
+        - awake():
+            - sets public static BattleManager instance to self
+            - sets playerInitialized to false, then initializes player:
+                - player component grabbed from GameObject playerObject
+                - builds entity (sets stats of player's Entity object to stats based on given entityType)
+                - sets playerInitialized to true
+            - Refreshes weaponDatabase, itemDatabase, entityDatabase, encounterDatabase, perkDatabase
+            - creates EntitySlot[enemyBattlePositions.Length] for enemies
+                *note: Transform[] enemyBattlePositions set to 
+            - creates HealthBar[enemyBattlePositions.Length] for enemyHealthBars
+            - fills in enemies with new EntitySlots
+            - gives enemyHealthBars reference to 

@@ -16,7 +16,7 @@ public class BattleManager : MonoBehaviour
     public SugarBar playerSugar;
     public GameObject effectTextPrefab;
     public EntitySlot[] enemies;
-    public static bool playerInitialized = false;
+    public bool playerInitialized = false;
     public ItemSystem itemDatabase;
     public HealthBar[] enemyHealthBars;
     public WeaponSystem weaponDatabase;
@@ -33,10 +33,6 @@ public class BattleManager : MonoBehaviour
     
     public Transform[] enemyBattlePositions;
 
-    public Weapon defaultWeapon;
-    public Image defaultWeaponSprite;
-    public event Action OnWeaponSelectedCallback;
-    public event Action OnDefaultWeaponChanged;
     public event Action OnEnemyKilled;
 
 
@@ -44,33 +40,36 @@ public class BattleManager : MonoBehaviour
     public Player player;
     public static BattleManager instance;
 
-    public static int selectedWeaponSlot = -1;
-    public int newSelectedWeaponSlot = -1;
 
 
 
     void Awake()
     {
         instance = this;
+
+        //initialize player so that other methods don't try to refer to player it is build
         playerInitialized = false;
         player = playerObject.GetComponent<Player>();
-        defaultWeapon = player.playerType.weapon;
         player.BuildEntity();
         player.BuildPlayerEntity();
         playerInitialized = true;
+
+        //refresh all databases
         weaponDatabase.RefreshDatabase();
         itemDatabase.RefreshDatabase();
         entityDatabase.RefreshDatabase();
         encounterDatabase.RefreshDatabase();
         perkDatabase.RefreshDatabase();
 
+        //creates array of EntitySlots, each holds reference to if spot taken, entity, and entity GameObject
         enemies = new EntitySlot[enemyBattlePositions.Length];
+        //creates array of healthbars
         enemyHealthBars = new HealthBar[enemyBattlePositions.Length];
 
         for(int i = 0; i < enemies.Length; i++)
         {
-            enemies[i] = new EntitySlot();
-            enemyHealthBars[i] = enemyBattlePositions[i].GetComponentInChildren<HealthBar>();
+            enemies[i] = new EntitySlot(); //create new entityslots
+            enemyHealthBars[i] = enemyBattlePositions[i].GetComponentInChildren<HealthBar>(); //grab reference to healthbar from enemy GameObjects
         }
     }
 
@@ -84,6 +83,7 @@ public class BattleManager : MonoBehaviour
         SeedManager.instance.GenerateRandomSeed();
     }
 
+
     IEnumerator LateStartForAddingWeapon() //debug
     { 
         yield return new WaitForSeconds(1f);
@@ -91,11 +91,6 @@ public class BattleManager : MonoBehaviour
         TurnManager.instance.StartBattle();
     }
 
-    void UpdateDefaultWeapon()
-    {
-        defaultWeapon = player.playerType.weapon;
-        OnDefaultWeaponChanged.Invoke();
-    }
 
     void Update()
     {
@@ -210,6 +205,11 @@ public class BattleManager : MonoBehaviour
         return false;
     }
 
+    public void InvokeEnemyKilled()
+    {
+        OnEnemyKilled.Invoke();
+    }
+
     GameObject InitializeEntity(EntityType entityType)
     {
         GameObject newEntity = new GameObject(entityType.entityName);
@@ -237,7 +237,6 @@ public class BattleManager : MonoBehaviour
 
         return newEntity;
     }
-
 
 
     public bool CreateEntity(EntityType entityType, int slotOverride = 0)
@@ -364,196 +363,6 @@ public class BattleManager : MonoBehaviour
     }
 
     
-
-    public void SelectNewWeapon(int newWeaponInventorySlot)
-    {
-        if (TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput)
-        {
-            newSelectedWeaponSlot = newWeaponInventorySlot;
-            // Debug.Log("Hovered weapon slot: " + newSelectedWeaponSlot);
-            // Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[newSelectedWeaponSlot].weapon.itemName);
-            PlayerAttackTargettingHelper.instance.ChangeCheckBool(true);
-            OnWeaponSelectedCallback.Invoke();
-        }
-    }
-
-    public void SelectDefaultWeapon()
-    {
-        if (TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput)
-        {
-            newSelectedWeaponSlot = -1;
-            Debug.Log("Hovered weapon slot: default");
-            // Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[newSelectedWeaponSlot].weapon.itemName);
-            PlayerAttackTargettingHelper.instance.ChangeCheckBool(true);
-        }
-    }
-
-    public void LockInWeapon()
-    {
-        selectedWeaponSlot = newSelectedWeaponSlot;
-        if (selectedWeaponSlot < 0)
-        {
-            // Debug.Log("Selected new weapon: " + defaultWeapon.itemName);
-        }
-        else
-        Debug.Log("Selected new weapon: " + WeaponInventory.instance.weapons[selectedWeaponSlot].weapon.itemName);
-    }
-
-    public void PlayerAttack(List<Entity> targets, bool special = false)
-    {
-        foreach(Entity e in targets)
-        {
-            for(int i = 0;i<enemyHealthBars.Length;i++)
-            {
-                if(enemyHealthBars[i].entity == e)
-                {
-                    int dealtDamage = 0;
-                    if (selectedWeaponSlot<0)
-                    {
-                        int calcDamage = CalculateDamage(defaultWeapon, player, e, special);
-                        Debug.Log("Entity, " + e.entityType.entityName + ", is being dealt " + calcDamage + " damage");
-                        dealtDamage = enemyHealthBars[i].ReduceHealth(calcDamage);
-                    }
-                    else
-                    {
-                        if(WeaponInventory.instance.GetDurability(selectedWeaponSlot)>0)
-                        {
-                            int calcDamage = CalculateDamage(WeaponInventory.instance.weapons[selectedWeaponSlot].weapon, player, e, special);
-                            Debug.Log("Entity, " + e.entityType.entityName + ", is being dealt " + calcDamage + " damage");
-                            dealtDamage = enemyHealthBars[i].ReduceHealth(calcDamage);
-                            WeaponInventory.instance.ReduceDurability(selectedWeaponSlot, WeaponInventory.instance.weapons[selectedWeaponSlot].weapon.attackDurabilityCost);
-                        }
-                    }
-                    SpawnEffectText(dealtDamage.ToString(),i,"white");
-
-                    if (player.vamp)
-                    {
-                        playerHealth.IncreaseHealth((int)Math.Round(dealtDamage*player.vampAmount));
-                    }
-                    if (player.sugarSteal)
-                    {
-                        playerSugar.IncreaseSugar((int)Math.Round(dealtDamage*player.sugarStealAmount));
-                    }
-                    
-                    
-
-                    if (enemyHealthBars[i].GetHealth() == 0)
-                    {
-                        Debug.Log("Enemy killed at slot " + i);
-                        OnEnemyKilled.Invoke();
-                        RemoveEnemy(i);
-                    }
-                            
-                    
-                }
-            }
-        }
-    }
-
-    public int CalculateDamage(Weapon weapon, Entity attacker, Entity defender, bool special = false)
-    {
-        // Debug.Log("Performing Damage Calculation:");
-        //calc damage using attacker's atk & defender's def weapondmg*attackerpwr*(25/25+defenderdef)
-        // Debug.Log(weapon.damage + " weapon damage");
-        // Debug.Log(attacker.power + " attacker power");
-        // Debug.Log(defender.defense + " defender defense");
-        float preroundedDamage;
-        float attackerPowerAfterBuffs = (attacker.power + attacker.powerFlatMod)*attacker.powerMultMod;
-        float defenderDamageAfterBuffs = (defender.defense + defender.defenseFlatMod)*defender.defenseMultMod;
-        if (!special)
-        preroundedDamage = weapon.damage * attackerPowerAfterBuffs;
-        else
-        preroundedDamage = weapon.specialDamage * attackerPowerAfterBuffs;
-        float defenseMulti = 25+defenderDamageAfterBuffs;
-        // Debug.Log(defenseMulti + " defenseMulti before being divided");
-
-        defenseMulti = 25/defenseMulti;
-        // Debug.Log(preroundedDamage + " prerounded damage before defense multi");
-        // Debug.Log(defenseMulti + " defenseMulti after being divided");
-
-        preroundedDamage *= defenseMulti;
-        // Debug.Log(preroundedDamage + " prerounded damage");
-        
-        //check if special weakness, if so then do math for damage
-        if (weapon.damageType == defender.entityType.weaknessTag && weapon.damageType != "")
-        {
-            // Debug.Log("Weakness to " + weapon.damageType + " found!");
-            preroundedDamage*=1.25f;
-            Debug.Log(preroundedDamage + " prerounded damage post weakness check");
-        }
-        //roll for crit if can crit
-        if (weapon.canCrit && attacker.canCrit)
-        {
-            if (RollForCrit(weapon, attacker))
-            {
-                Debug.Log("Landed a crit!");
-                preroundedDamage*=weapon.critMult;
-            }
-        }
-        int processedDamage = (int)preroundedDamage+1;
-        //return damage
-        if (processedDamage <= 0)
-        {
-            processedDamage = 1;
-        }
-        return processedDamage;
-    }
-
-
-    private bool RollForCrit(Weapon weapon, Entity attacker)
-    {
-        float rand = UnityEngine.Random.Range(0f, 100f);
-        // Debug.Log("Crit roll: " + rand);
-        float critChance = attacker.luck + weapon.critChanceBoost;
-        // Debug.Log("Crit chance: " + critChance);
-        if (critChance>=rand)
-        {
-            return true;
-        }
-        else
-        return false;
-
-    }
-
-    public void EatWeaponForTurn()
-    {
-        if (TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput)
-        {
-            LockInWeapon();
-            TurnManager.instance.choice = TurnManager.Choice.Eat;
-            TurnManager.instance.ChoiceChosen = true;
-        }
-        
-    }
-
-    public bool EatWeapon(int eatWeaponSlot = -1)
-    {
-        if (eatWeaponSlot<0)
-        {
-            eatWeaponSlot = selectedWeaponSlot;
-        }
-        if (WeaponInventory.instance.weapons[eatWeaponSlot].durability>0)
-        {
-            WeaponInventory.instance.ReduceDurability(eatWeaponSlot, 1);
-            playerSugar.IncreaseSugar(WeaponInventory.instance.weapons[eatWeaponSlot].weapon.sugarYield);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-        
-        
-    }
-
-    public void PassTurn()
-    {
-        if (TurnManager.instance.state == TurnManager.State.WaitingForPlayerInput)
-        {
-            TurnManager.instance.choice = TurnManager.Choice.PassTurn;
-            TurnManager.instance.ChoiceChosen = true;
-        }
-    }
 
     
     public void SpawnEffectText(String text,int slot = -1, String color = "white")

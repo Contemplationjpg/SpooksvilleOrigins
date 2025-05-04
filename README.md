@@ -32,7 +32,9 @@ Art Progress:
     - no music yet
     - only have temp sprites for billy, skeleton, fist
 
-To-Do: (* meaning big item) (s = started, a = always, f = finished)
+To-Do: (! = urgent, * = big item, s = started, a = always, f = finished)
+!- undo ManagerConsolidation (reason: adds extra timing of initialization, should only need to worry about awake, start, and manual timing post-start)
+!- move item and weapon databases to respective InventoryManagers to refresh there instead
 *- sugar/duability system (s)
 - battle UI (a)
 - animation for dealing damage (probably add screen-shake dependent on raw damage number or percent of damage done to enemy)
@@ -55,6 +57,8 @@ IMPORTANT:
 - things in the game should have a size they should be
 - in order to do this, decision needs to be made on if the game will use pixel art or vector art or hand-drawn
 - health bars and other UI should be included in (re)sizing
+
+- I feel now that the art should have a more hand drawn, chibi look instead of a pixel art look
 
 
 

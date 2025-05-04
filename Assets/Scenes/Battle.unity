@@ -807,6 +807,7 @@ GameObject:
   - component: {fileID: 177891770}
   - component: {fileID: 177891771}
   - component: {fileID: 177891772}
+  - component: {fileID: 177891773}
   m_Layer: 0
   m_Name: BattleManager
   m_TagString: Untagged
@@ -845,6 +846,7 @@ MonoBehaviour:
   playerHealth: {fileID: 1909735052}
   playerSugar: {fileID: 527192105}
   effectTextPrefab: {fileID: 8055861229882315285, guid: 7440fb3c2372f4b4fb1f780f003cc3f6, type: 3}
+  playerInitialized: 0
   itemDatabase: {fileID: 11400000, guid: f074ddf0b3a25344da8d4fe0dcf8ed7e, type: 2}
   enemyHealthBars:
   - {fileID: 2074149086}
@@ -866,10 +868,7 @@ MonoBehaviour:
   - {fileID: 1919402043}
   - {fileID: 837641013}
   - {fileID: 1489402580}
-  defaultWeapon: {fileID: 0}
-  defaultWeaponSprite: {fileID: 393276810}
   player: {fileID: 0}
-  newSelectedWeaponSlot: 0
 --- !u!114 &177891769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -934,6 +933,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f4f1c27742d0a248a7e54daba911fe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentSeed: 1000000
+--- !u!114 &177891773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177891765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b56e406a5fb5dad408456ba056d97670, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GAMER: 
+  defaultWeapon: {fileID: 0}
+  defaultWeapon2: {fileID: 0}
+  newSelectedWeaponSlot: -1
 --- !u!1 &180651767
 GameObject:
   m_ObjectHideFlags: 0

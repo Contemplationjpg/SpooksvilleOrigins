@@ -101,7 +101,7 @@ public class TurnManager : MonoBehaviour
                     {
                     case 0: //Attack
                     player.GetComponentInParent<SimpleAnimation>().DoLittleHop();
-                    BattleManager.instance.PlayerAttack(PlayerAttackTargettingHelper.instance.targets);
+                    BattleOptionsManager.instance.PlayerAttack(PlayerAttackTargettingHelper.instance.targets);
                     PlayerAttackTargettingHelper.instance.targets.Clear(); 
                     
                     player.ChangeActionCount(-1);
@@ -114,10 +114,10 @@ public class TurnManager : MonoBehaviour
                     case 1: //SpecialAttack
 
                     player.GetComponentInParent<SimpleAnimation>().DoBigHop();
-                    BattleManager.instance.PlayerAttack(PlayerAttackTargettingHelper.instance.targets, true);
+                    BattleOptionsManager.instance.PlayerAttack(PlayerAttackTargettingHelper.instance.targets, true);
                     PlayerAttackTargettingHelper.instance.targets.Clear(); 
                     
-                    BattleManager.instance.playerSugar.ReduceSugar(WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.specialSugarCost);
+                    BattleManager.instance.playerSugar.ReduceSugar(WeaponInventory.instance.weapons[BattleOptionsManager.instance.newSelectedWeaponSlot].weapon.specialSugarCost);
                     player.ChangeActionCount(-1);
                     UpdateTurnDisplay();
                     // StartCoroutine(FinishTurn(player, State.WaitingForEnemyInput));
@@ -125,7 +125,7 @@ public class TurnManager : MonoBehaviour
                     return;
 
                     case 2: //Eat
-                    if (BattleManager.instance.EatWeapon())
+                    if (BattleOptionsManager.instance.EatWeapon())
                     {
                         player.ChangeActionCount(-1);
                         UpdateTurnDisplay();

@@ -55,8 +55,8 @@ public class WeaponInventoryManager : MonoBehaviour
     {
         weaponInventory = WeaponInventory.instance;
         weaponInventory.OnWeaponChangedCallBack += UpdateWeaponUI;
-        BattleManager.instance.OnWeaponSelectedCallback += UpdateSelectedWeaponUI;
-        BattleManager.instance.OnDefaultWeaponChanged += UpdateDefaultWeaponUI;
+        BattleOptionsManager.instance.OnWeaponSelectedCallback += UpdateSelectedWeaponUI;
+        BattleOptionsManager.instance.OnDefaultWeaponChanged += UpdateDefaultWeaponUI;
         TurnManager.instance.PlayerActionable += MakePlayerActionable;
         TurnManager.instance.PlayerNonActionable += MakePlayerInactionable;
         UpdateDefaultWeaponUI();
@@ -92,7 +92,7 @@ public class WeaponInventoryManager : MonoBehaviour
                         buttons[i].interactable = isPlayerActionable;
                         WeaponInventoryContainer thisWeapon = weaponInventory.weapons[i];
                         int currentInventorySlot = i;
-                        buttons[i].onClick.AddListener(() => BattleManager.instance.SelectNewWeapon(currentInventorySlot));
+                        buttons[i].onClick.AddListener(() => BattleOptionsManager.instance.SelectNewWeapon(currentInventorySlot));
                     }    
                 }
                 catch(Exception ex)
@@ -108,22 +108,22 @@ public class WeaponInventoryManager : MonoBehaviour
     void UpdateDefaultWeaponUI()
     {
         // defaultSlotIcon.color = new Color32(255,255,255,255);
-        defaultSlot.sprite = BattleManager.instance.defaultWeapon.icon;
+        defaultSlot.sprite = BattleOptionsManager.instance.defaultWeapon.icon;
     }
 
     void UpdateSelectedWeaponUI()
     {
         // Debug.Log("Updating Selected Weapon UI");
-        if (BattleManager.instance.newSelectedWeaponSlot >= 0)
+        if (BattleOptionsManager.instance.newSelectedWeaponSlot >= 0)
         {
             // selectedWeapon.color = new Color32(0,0,0,0);
-            selectedWeapon.sprite = weaponInventory.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.icon;    
+            selectedWeapon.sprite = weaponInventory.weapons[BattleOptionsManager.instance.newSelectedWeaponSlot].weapon.icon;    
         }
         
         else
         {
             // selectedWeapon.color = new Color32(255,255,255,255);
-            selectedWeapon.sprite = BattleManager.instance.defaultWeapon.icon;
+            selectedWeapon.sprite = BattleOptionsManager.instance.defaultWeapon.icon;
         }
         
     }
@@ -172,7 +172,7 @@ public class WeaponInventoryManager : MonoBehaviour
 
     IEnumerator InitializeDefaultWeapon()
     {
-        yield return new WaitUntil(()=>BattleManager.playerInitialized = true);
+        yield return new WaitUntil(()=>BattleManager.instance.playerInitialized == true);
         Debug.Log("Initializing Default Weapon");
         InitializeButtons();
         UpdateDefaultWeaponUI();

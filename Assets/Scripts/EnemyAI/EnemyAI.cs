@@ -48,7 +48,7 @@ public class EnemyAI : MonoBehaviour
 
     public void EnemyAttack()
     {
-        int damage = battleManager.CalculateDamage(weapon, enemy, player);
+        int damage = BattleOptionsManager.instance.CalculateDamage(weapon, enemy, player);
         if (TurnManager.instance.playerDefending)
         {
             damage = (int)Math.Round(damage * TurnManager.instance.playerDefendingMod);  

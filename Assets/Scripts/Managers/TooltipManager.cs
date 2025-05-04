@@ -155,7 +155,7 @@ public class TooltipManager : MonoBehaviour
     {
         if (slot < 0)
         {
-            WeaponInventoryContainer defWeap = new WeaponInventoryContainer(BattleManager.instance.defaultWeapon, 1);
+            WeaponInventoryContainer defWeap = new WeaponInventoryContainer(BattleOptionsManager.instance.defaultWeapon, 1);
             WeaponStatTip(defWeap);
             return true;
         }

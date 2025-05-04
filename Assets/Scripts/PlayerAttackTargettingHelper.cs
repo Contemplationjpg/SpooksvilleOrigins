@@ -34,16 +34,16 @@ public class PlayerAttackTargettingHelper : MonoBehaviour
 
     public void AttemptToAddTargetToList(Entity newTarget)
     {
-        if (BattleManager.instance.newSelectedWeaponSlot<=WeaponInventory.instance.weapons.Length && newTarget != null)
+        if (BattleOptionsManager.instance.newSelectedWeaponSlot<=WeaponInventory.instance.weapons.Length && newTarget != null)
         {
             int maxTargets = 0;
-            if (BattleManager.instance.newSelectedWeaponSlot < 0)
+            if (BattleOptionsManager.instance.newSelectedWeaponSlot < 0)
             {
-                maxTargets = BattleManager.instance.defaultWeapon.numberOfTargets;
+                maxTargets = BattleOptionsManager.instance.defaultWeapon.numberOfTargets;
             }
             else
             {
-                maxTargets = WeaponInventory.instance.weapons[BattleManager.instance.newSelectedWeaponSlot].weapon.numberOfTargets;
+                maxTargets = WeaponInventory.instance.weapons[BattleOptionsManager.instance.newSelectedWeaponSlot].weapon.numberOfTargets;
             }
             if (targets.Count < maxTargets)
             {
